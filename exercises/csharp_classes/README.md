@@ -5,7 +5,7 @@
 These resources may prove useful/interesting.
 
 * [DateTime struct](https://docs.microsoft.com/en-us/dotnet/api/system.datetime?view=netcore-2.2).
-* [Structs v Classes]()
+* [Structs & Classes](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/)
 * [The `Math` class](https://docs.microsoft.com/en-us/dotnet/api/system.math?view=netcore-2.2)
 * [Primitive Obsession](https://medium.com/@arpitjain.iec/primitive-obsession-code-smell-that-hurt-people-the-most-5cbdd70496e9)
 
