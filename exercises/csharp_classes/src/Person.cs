@@ -31,3 +31,6 @@ namespace Exercises
     }
 
 }
+// Reflective Questions
+//  1. It is not possible for Datetime to be null. They would be set to `DateTime.MinValue`
+//  2. Right now I am only getting age using the current year, so it might not be accurate depending on if the month has passed....

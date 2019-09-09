@@ -29,7 +29,7 @@ namespace Exercises
             Title = title;
             Author = author;
             NumberOfPages = numberOfPages;
-            CurrentPage = 0;
+            CurrentPage = 1;
         }
 
         public void SetBookmark(int pageNumber)
@@ -59,3 +59,9 @@ namespace Exercises
     }
 
 }
+
+// Reflective questions
+//  1. Use `unit` as the type
+//  2.  https://mentormate.com/bg/blog/modern-validation-patterns-in-c-sharp/
+//  3. using named parameters/arguments - new Book(author: "Stephen King", title: "Pet Cemetary", 230)
+//  4. Perhaps they would not be equal - different memory locations?
