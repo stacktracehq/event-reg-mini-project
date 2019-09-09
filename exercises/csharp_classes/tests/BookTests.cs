@@ -36,7 +36,7 @@ namespace Tests
             });
 
             Assert.Contains(
-                "A book must have a author",
+                "A book must have an author",
                 exceptionFromEmpty.Message
             );
 
@@ -45,7 +45,7 @@ namespace Tests
             });
 
             Assert.Contains(
-                "A book must have a author",
+                "A book must have an author",
                 exceptionFromNull.Message
             );
         }
