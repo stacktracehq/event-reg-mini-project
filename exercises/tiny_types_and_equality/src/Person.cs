@@ -4,28 +4,18 @@ namespace Exercises
 {
     public class Person
     {
-        public string Name {get;}
-        public DateTime DateOfBirth {get;}
-        public Person(string name, DateTime dateOfBirth)
+        public Name Name {get;}
+        public DateOfBirth DateOfBirth {get;}
+
+        public Person(Name name, DateOfBirth dateOfBirth)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("A person must have a name");
-            }
-
-            if (dateOfBirth > DateTime.Now)
-            {
-                throw new ArgumentException("A person cannot have a date of birth in the future");
-            }
-
-            Name = name;
-            DateOfBirth = dateOfBirth;
+            Name = new Name(name.Value);
+            DateOfBirth = new DateOfBirth(dateOfBirth.Value);
         }
 
         public int GetAgeInYears()
         {
-            return DateTime.Now.Year - DateOfBirth.Year;
-
+            return DateTime.Now.Year - DateOfBirth.Value.Year;
         }
 
     }
