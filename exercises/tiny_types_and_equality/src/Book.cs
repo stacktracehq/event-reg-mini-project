@@ -4,51 +4,36 @@ namespace Exercises
 {
     public class Book
     {
-        public int CurrentPage { get; private set; }
-        public string Title { get; }
-        public string Author { get; }
-        public int NumberOfPages { get; }
+        public PageNumber CurrentPage { get; private set; }
+        public Title Title { get; }
+        public Author Author { get; }
+        public PageNumber NumberOfPages { get; }
 
-        public Book(string title, string author, int numberOfPages)
+        public Book(Title title, Author author, PageNumber numberOfPages)
         {
-            if (string.IsNullOrEmpty(title))
-            {
-                throw new ArgumentException("A book must have a title");
-            }
-
-            if (string.IsNullOrEmpty(author))
-            {
-                throw new ArgumentException("A book must have an author");
-            }
-
-            if (numberOfPages <= 0)
-            {
-                throw new ArgumentException("A book must have at least one page");
-            }
-
             Title = title;
             Author = author;
             NumberOfPages = numberOfPages;
-            CurrentPage = 1;
+            CurrentPage = new PageNumber(1);
         }
 
-        public void SetBookmark(int pageNumber)
+        public void SetBookmark(PageNumber pageNumber)
         {
-            if (pageNumber < 1 || pageNumber > NumberOfPages)
+            if (pageNumber < 1 || pageNumber.Value > NumberOfPages.Value)
             {
-                throw new ArgumentException("Bookmarked page must be in range 1-" + NumberOfPages);
+                throw new ArgumentException("Bookmarked page must be in range 1-" + NumberOfPages.Value);
             }
             CurrentPage = pageNumber;
         }
 
         public void ClearBookmark()
         {
-            CurrentPage = 1;
+            CurrentPage = new PageNumber(1);
         }
 
         public int EstimateRemainingReadingMinutes(double pagesReadPerMinute)
         {
-            int pagesLeftToRead = NumberOfPages - CurrentPage + 1;
+            int pagesLeftToRead = NumberOfPages.Value - CurrentPage.Value + 1;
             if (pagesLeftToRead == 1 && pagesReadPerMinute > 1)
             {
                 return 1;
@@ -59,9 +44,3 @@ namespace Exercises
     }
 
 }
-
-// Reflective questions
-//  1. Use `unit` as the type
-//  2.  https://mentormate.com/bg/blog/modern-validation-patterns-in-c-sharp/
-//  3. using named parameters/arguments - new Book(author: "Stephen King", title: "Pet Cemetary", 230)
-//  4. Perhaps they would not be equal - different memory locations?
