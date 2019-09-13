@@ -13,7 +13,7 @@ namespace Tests
         public void CannotConstructAPersonWithNullName()
         {
             var exception = Assert.Throws<ArgumentException>(() => {
-                new Person(null, _bradsBirthday);
+                new Person(new Name(null), new DateOfBirth(_bradsBirthday));
             });
 
             Assert.Contains(
@@ -26,7 +26,7 @@ namespace Tests
         public void CannotConstructAPersonWithAnEmptyName()
         {
             var exception = Assert.Throws<ArgumentException>(() => {
-                new Person(string.Empty, _bradsBirthday);
+                new Person(new Name(string.Empty), new DateOfBirth( _bradsBirthday ));
             });
 
             Assert.Contains(
@@ -35,11 +35,12 @@ namespace Tests
             );
         }
 
+
         [Fact]
         public void CannotConstructAPersonWithADateOfBirthInTheFuture()
         {
             var exception = Assert.Throws<ArgumentException>(() => {
-                new Person("Brad", DateTime.Now.AddYears(1));
+                new Person(new Name("Brad"), new DateOfBirth( DateTime.Now.AddYears(1) ));
             });
 
             Assert.Contains(
@@ -51,10 +52,10 @@ namespace Tests
         [Fact]
         public void AgeIsCalculatedCorrectlyForDatesInThePast()
         {
-            var brad = new Person("Brad", new DateTime(1987, 3, 6));
+            var brad = new Person(new Name("Brad"), new DateOfBirth( new DateTime(1987, 3, 6) ));
             Assert.Equal(32, brad.GetAgeInYears());
 
-            var colleen = new Person("Colleen", new DateTime(1977, 3, 6));
+            var colleen = new Person(new Name("Colleen"), new DateOfBirth(new DateTime(1977, 3, 6)));
             Assert.Equal(42, colleen.GetAgeInYears());
         }
     }

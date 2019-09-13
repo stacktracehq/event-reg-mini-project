@@ -1,6 +1,6 @@
 # Tiny Types and Value Equality
 
-We've talked about 'tiny types' as a pattern where we wrap primtive types, e.g.
+We've talked about 'tiny types' as a pattern where we wrap primitive types, e.g.
 `string` or `int` into a more domain-relevant custom type, e.g.
 `CustomerNumber`, or `PageCount`.
 
