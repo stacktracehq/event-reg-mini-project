@@ -7,112 +7,12 @@ namespace Tests
     public class BookTests
     {
         [Fact]
-        public void CannotConstructABookWithEmptyOrNullTitle()
-        {
-            var exceptionFromEmpty = Assert.Throws<ArgumentException>(() => {
-                new Book(new Title(""), new Author("Stephen King"), new PageNumber(230));
-            });
-
-            Assert.Contains(
-                "A book must have a title",
-                exceptionFromEmpty.Message
-            );
-
-            // var exceptionFromNull = Assert.Throws<ArgumentException>(() => {
-            //     new Book(null, "Stephen King", new PageNumber(230));
-            // });
-
-            // Assert.Contains(
-            //     "A book must have a title",
-            //     exceptionFromNull.Message
-            // );
-        }
-
-        [Fact]
-        public void CannotConstructABookWithEmptyOrNullAuthor()
-        {
-            var exceptionFromEmpty = Assert.Throws<ArgumentException>(() => {
-                new Book(new Title("Pet Cemetary"), new Author(""), new PageNumber(230));
-            });
-
-            Assert.Contains(
-                "A book must have an author",
-                exceptionFromEmpty.Message
-            );
-
-            var exceptionFromNull = Assert.Throws<ArgumentException>(() => {
-                new Book(new Title("Pet Cemetary"), new Author(null), new PageNumber(230));
-            });
-
-            Assert.Contains(
-                "A book must have an author",
-                exceptionFromNull.Message
-            );
-        }
-
-        [Fact]
-        public void CannotConstructABookWithANegativeNumberOfPages()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => {
-                new Book(new Title("Pet Cemetary"), new Author("Stephen King"), new PageNumber(-1));
-            });
-
-            Assert.Contains(
-                "A book must have at least one page",
-                exception.Message
-            );
-        }
-
-        [Fact]
-        public void CannotConstructABookWithZeroPages()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => {
-                new Book(new Title("Pet Cemetary"), new Author("Stephen King"), new PageNumber(0));
-            });
-
-            Assert.Contains(
-                "A book must have at least one page",
-                exception.Message
-            );
-        }
-
-        [Fact]
         public void SettingABookmarkUpdatesCurrentPage()
         {
             var petCemetary = new Book(new Title("Pet Cemetary"), new Author("Stephen King"), new PageNumber(230));
             petCemetary.SetBookmark(new PageNumber(100));
             Assert.Equal(100, petCemetary.CurrentPage.Value);
         }
-
-        // [Fact]
-        // public void SettingABookmarkToANegativePageNumberThrows()
-        // {
-        //     var petCemetary = new Book("Pet Cemetary", "Stephen King", new PageNumber(230));
-
-        //     var exception = Assert.Throws<ArgumentException>(() => {
-        //         petCemetary.SetBookmark(new PageNumber(-1));
-        //     });
-
-        //     Assert.Contains(
-        //         "Bookmarked page must be in range 1-230",
-        //         exception.Message
-        //     );
-        // }
-
-        // [Fact]
-        // public void SettingABookmarkToPageZeroThrows()
-        // {
-        //     var petCemetary = new Book("Pet Cemetary", "Stephen King", new PageNumber(230));
-
-        //     var exception = Assert.Throws<ArgumentException>(() => {
-        //         petCemetary.SetBookmark(new PageNumber(0));
-        //     });
-
-        //     Assert.Contains(
-        //         "Bookmarked page must be in range 1-230",
-        //         exception.Message
-        //     );
-        // }
 
         [Fact]
         public void SettingABookmarkToAPageGreaterThanNumberOfPagesThrows()

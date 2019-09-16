@@ -13,30 +13,9 @@ namespace Exercises
 
     public class Name : TinyType<string>
     {
-        public Name(string value) : base(value)
-        {
-            if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException("A person must have a name");
-                }
-        }
-    }
-
-    public class DateOfBirth : TinyType<DateTime>
-    {
-        public DateOfBirth(DateTime value) : base(value)
-        {
-            if (value > DateTime.Now)
-            {
-                throw new ArgumentException("A person cannot have a date of birth in the future");
-            }
-        }
-    }
-
-    public class Person
-    {
         public Name Name {get;}
         public DateOfBirth DateOfBirth {get;}
+
         public Person(Name name, DateOfBirth dateOfBirth)
         {
             Name = new Name(name.Value);
@@ -46,7 +25,6 @@ namespace Exercises
         public int GetAgeInYears()
         {
             return DateTime.Now.Year - DateOfBirth.Value.Year;
-
         }
 
     }
