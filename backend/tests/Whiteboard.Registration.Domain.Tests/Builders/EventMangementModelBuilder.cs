@@ -10,12 +10,12 @@ namespace Whiteboard.Registration.Domain.Tests
         {
             return new EventManagementModel(
                 new EventTitle("Carlies Super Duper Event"),
-                "event description",
-                "event location",
-                new DateTime(2019, 9, 12),
-                new DateTime(2019, 9, 12),
-                new DateTime(2019, 9, 1),
-                new DateTime(2019, 9, 5)
+                new EventDescription("event description"),
+                new EventLocation("event location"),
+                new EventStartDate(new DateTime(2019, 9, 12)),
+                new EventEndDate(new DateTime(2019, 9, 12)),
+                new RegistrationOpenDate(new DateTime(2019, 9, 1)),
+                new RegistrationCloseDate(new DateTime(2019, 9, 5))
             );
         }
     }

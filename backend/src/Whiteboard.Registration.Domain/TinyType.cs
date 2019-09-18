@@ -12,6 +12,8 @@ namespace Whiteboard.Registration.Domain
         public T Value { get; }
 
         //  comparing
+
+        //  so I should add some exception catching to this? If the type isn't an int?
         public int CompareTo(TinyType<T> other) =>
             Value.CompareTo(other.Value);
 

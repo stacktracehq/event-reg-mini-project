@@ -2,13 +2,6 @@
 
 namespace Whiteboard.Registration.Domain
 {
-    public class EventTitle : TinyType<string>
-    {
-        public EventTitle(string value) : base(value){}
-    }
-
-    // todo @Carlie tedium...
-
     public class EventManagementModel
     {
         public EventTitle Title { get; }
@@ -47,10 +40,10 @@ namespace Whiteboard.Registration.Domain
             EventTitle eventTitle = null,
             EventDescription description = null,
             EventLocation eventLocation = null,
-            EventStartDate? eventStartDate = null,
-            EventEndDate? eventEndDate = null,
-            RegistrationOpenDate? registrationOpenDate = null,
-            RegistrationCloseDate? registrationCloseDate = null
+            EventStartDate eventStartDate = null,
+            EventEndDate eventEndDate = null,
+            RegistrationOpenDate registrationOpenDate = null,
+            RegistrationCloseDate registrationCloseDate = null
         ) => new EventManagementModel(
             title: eventTitle ?? Title,
             description: description ?? Description,

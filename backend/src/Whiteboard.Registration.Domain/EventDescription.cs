@@ -8,3 +8,4 @@ namespace Whiteboard.Registration.Domain
         {
         }
     }
+}
