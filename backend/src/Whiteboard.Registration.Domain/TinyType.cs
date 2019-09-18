@@ -2,49 +2,45 @@ using System;
 
 namespace Whiteboard.Registration.Domain
 {
-    public class TinyType<T> : IEquatable<TinyType<T>>, IComparable<TinyType<T>> where T : IComparable<T>
+    public abstract class TinyType<T> :
+        IEquatable<TinyType<T>>,
+        IEquatable<T>
+            where T :  IEquatable<T>
     {
-        public TinyType(T value)
+        protected TinyType(T value)
         {
             Value = value;
         }
 
         public T Value { get; }
 
-        //  comparing
-
-        //  so I should add some exception catching to this? If the type isn't an int?
-        public int CompareTo(TinyType<T> other) =>
-            Value.CompareTo(other.Value);
-
-        public static bool operator >= (TinyType<T> a, TinyType<T> b) =>
-            a.CompareTo(b) >= 0;
-        public static bool operator <= (TinyType<T> a, TinyType<T> b) =>
-            a.CompareTo(b) <= 0;
-        public static bool operator > (TinyType<T> a, TinyType<T> b) =>
-            a.CompareTo(b) == 1;
-        public static bool operator < (TinyType<T> a, TinyType<T> b) =>
-            a.CompareTo(b) == -1;
-        public static bool operator > (TinyType<T> a, int b) =>
-            a is TinyType<int> t && t.Value.CompareTo(b) == 1;
-        public static bool operator < (TinyType<T> a, int b) =>
-            a is TinyType<int> t && t.Value.CompareTo(b) == -1;
-
         // equating
         public override bool Equals(object obj) =>
-            obj is T t && Equals(t);
+            obj is TinyType<T> tt && Equals(tt) || obj is T t && Equals(t);
 
         public bool Equals(TinyType<T> other) =>
-            other != null && Equals(Value, other);
+            other != null && Value.Equals(other.Value);
+
+        public bool Equals(T other) =>
+            other != null && Value.Equals(other);
 
         public override int GetHashCode() =>
             Value.GetHashCode();
 
-        public static bool operator ==(TinyType<T> a, TinyType<T> b) =>
-             Equals(a, b);
+        public static bool operator ==(TinyType<T> a, TinyType<T> b)
+        {
+            if (a is null && b is null) return true;
+            return !(a is null) && a.Equals(b);
+        }
+
+        public static bool operator ==(TinyType<T> a, T b) =>
+            a?.Value.Equals(b) ?? false;
+
+        public static bool operator !=(TinyType<T> a, T b) =>
+            !(a == b);
 
         public static bool operator !=(TinyType<T> a, TinyType<T> b) =>
-            !Equals(a, b);
+            !(a == b);
     }
 
 }
