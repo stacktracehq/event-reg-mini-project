@@ -13,9 +13,9 @@ namespace Exercises
             DateOfBirth = new DateOfBirth(dateOfBirth.Value);
         }
 
-        public int GetAgeInYears()
+        public int GetAgeInYears(ITimeProvider timeProvider)
         {
-            var now = DateTime.Now;
+            var now = timeProvider.Now();
             var alreadyPassed =
                 DateOfBirth.Value.Month <= now.Month
                 && DateOfBirth.Value.Day <= now.Day;
