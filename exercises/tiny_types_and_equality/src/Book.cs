@@ -1,8 +1,9 @@
 using System;
 
+
 namespace Exercises
 {
-    public class Book
+    public class TinyType<T> : IEquatable<TinyType<T>>, IComparable<TinyType<T>> where T : IComparable<T>
     {
         public PageNumber CurrentPage { get; private set; }
         public Title Title { get; }

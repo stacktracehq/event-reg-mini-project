@@ -2,7 +2,16 @@ using System;
 
 namespace Exercises
 {
-    public class Person
+    // public class TinyType<T>
+    // {
+    //     public TinyType(T value)
+    //     {
+    //         Value = value;
+    //     }
+    //     public T Value { get; }
+    // }
+
+    public class Name : TinyType<string>
     {
         public Name Name {get;}
         public DateOfBirth DateOfBirth {get;}
