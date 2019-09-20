@@ -1,6 +1,4 @@
-using System;
-
-namespace Whiteboard.Registration.Domain
+namespace Whiteboard.Registration.Domain.Tiny
 {
     public class EventDescription : TinyType<string>
     {

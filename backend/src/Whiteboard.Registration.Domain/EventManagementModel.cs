@@ -1,6 +1,6 @@
-﻿﻿using System;
+﻿using Whiteboard.Registration.Domain.Tiny;
 
-namespace Whiteboard.Registration.Domain
+ namespace Whiteboard.Registration.Domain
 {
     public class EventManagementModel
     {

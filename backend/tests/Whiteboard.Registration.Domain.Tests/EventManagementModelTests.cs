@@ -1,6 +1,6 @@
-using System;
+using Whiteboard.Registration.Domain.Tests.Builders;
+using Whiteboard.Registration.Domain.Tiny;
 using Xunit;
-using Whiteboard.Registration.Domain;
 
 namespace Whiteboard.Registration.Domain.Tests
 {

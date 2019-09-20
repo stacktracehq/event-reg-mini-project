@@ -1,6 +1,6 @@
 using System;
 
-namespace Whiteboard.Registration.Domain
+namespace Whiteboard.Registration.Domain.Tiny
 {
     public abstract class TinyType<T> :
         IEquatable<TinyType<T>>,

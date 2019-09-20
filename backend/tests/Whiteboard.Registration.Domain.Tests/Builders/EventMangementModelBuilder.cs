@@ -1,8 +1,7 @@
 using System;
-using Xunit;
-using Whiteboard.Registration.Domain;
+using Whiteboard.Registration.Domain.Tiny;
 
-namespace Whiteboard.Registration.Domain.Tests
+namespace Whiteboard.Registration.Domain.Tests.Builders
 {
     public static class EventManagementModelBuilder
     {
