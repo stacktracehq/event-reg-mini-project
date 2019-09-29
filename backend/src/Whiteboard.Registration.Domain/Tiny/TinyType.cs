@@ -33,13 +33,13 @@ namespace Whiteboard.Registration.Domain.Tiny
             return !(a is null) && a.Equals(b);
         }
 
+        public static bool operator !=(TinyType<T> a, TinyType<T> b) =>
+            !(a == b);
+
         public static bool operator ==(TinyType<T> a, T b) =>
             a?.Value.Equals(b) ?? false;
 
         public static bool operator !=(TinyType<T> a, T b) =>
-            !(a == b);
-
-        public static bool operator !=(TinyType<T> a, TinyType<T> b) =>
             !(a == b);
     }
 
