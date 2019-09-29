@@ -72,18 +72,18 @@ namespace Whiteboard.Registration.Web.Controllers
         // POST /v1/events/
         [HttpPost]
         // public void Post([FromBody] string value)
-        public void Post()
+        public void Post(EventManagementModel value)
         {
             // create a new event
             Events.Add(new EventManagementModel(
                 Guid.NewGuid(),
-                new EventTitle("Another Event"),
-                new EventDescription("Description here"),
-                new EventLocation("Awesome Location"),
-                new EventStartDate(new DateTime(2020,02,02)),
-                new EventEndDate(new DateTime(2020,03,02)),
-                new RegistrationOpenDate(new DateTime(2020,01,02)),
-                new RegistrationCloseDate(new DateTime(2020,01,30))));
+                new EventTitle(value.Title.Value),
+                new EventDescription(value.Description.Value),
+                new EventLocation(value.EventLocation.Value),
+                new EventStartDate(value.EventStartDate.Value),
+                new EventEndDate(value.EventEndDate.Value),
+                new RegistrationOpenDate(value.RegistrationOpenDate.Value),
+                new RegistrationCloseDate(value.RegistrationCloseDate.Value)));
 
                 Console.WriteLine(Events.Count);
         }
@@ -93,24 +93,34 @@ namespace Whiteboard.Registration.Web.Controllers
         // public void Put(int id, [FromBody] EventManagementModel value)
         public void Put(int id, EventManagementModel value)
         {
-            // Events[id] = new EventManagementModel(
-            //     value.Id,
-            //     value.Title,
-            //     value.Description,
-            //     value.EventLocation,
-            //     value.EventStartDate,
-            //     value.EventEndDate,
-            //     value.RegistrationOpenDate,
-            //     value.RegistrationCloseDate
-            // );
-
-            Events[id].Title = value.Title;
+            if (value.Title != (default(EventTitle)))
+            {
+                Events[id].Title = value.Title;
+            }
+            if (value.Description != (default(EventDescription)))
+            {
             Events[id].Description = value.Description;
+            }
+            if (value.EventLocation != (default(EventLocation)))
+            {
             Events[id].EventLocation = value.EventLocation;
+            }
+            if (value.EventStartDate != (default(EventStartDate)))
+            {
             Events[id].EventStartDate = value.EventStartDate;
+            }
+            if (value.EventEndDate != (default(EventEndDate)))
+            {
             Events[id].EventEndDate = value.EventEndDate;
+            }
+            if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
+            {
             Events[id].RegistrationOpenDate = value.RegistrationOpenDate;
+            }
+            if (value.RegistrationCloseDate != default(RegistrationCloseDate))
+            {
             Events[id].RegistrationCloseDate = value.RegistrationCloseDate;
+            }
         }
 
         // DELETE /v1/events/{id}
