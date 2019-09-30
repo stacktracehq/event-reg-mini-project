@@ -46,33 +46,20 @@ namespace Whiteboard.Registration.Web.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<EventManagementDto>> Get()
         {
-            var listOfEvents = new List<EventManagementDto>();
-
-            foreach (var singleEvent in Events)
-            {
-                listOfEvents.Add(new EventManagementDto{
-                    Id  = singleEvent.Id,
-                    Title = singleEvent.Title.Value
-                });
-            }
-
-            Console.WriteLine(Events.Count);
-
-            return listOfEvents;
+            return Events
+                .Select(@event =>
+                    new EventManagementDto {
+                        Id = @event.Id,
+                        Title = @event.Title.Value
+                    })
+                .ToList();
         }
 
         // GET /v1/events/{id}
         [HttpGet("{id}")]
-        public ActionResult<EventManagementModel> Get(string id)
+        public ActionResult<EventManagementModel> Get(Guid id)
         {
-            foreach (var singleEvent in Events)
-            {
-                if (singleEvent.Id.ToString() == id)
-                {
-                    return singleEvent;
-                }
-            }
-            return null;
+            return Events.Single(@event => @event.Id == id);
         }
 
         // POST /v1/events/
@@ -95,57 +82,47 @@ namespace Whiteboard.Registration.Web.Controllers
         // PUT /v1/events/{id}
         // This is actually what a patch does
         [HttpPut("{id}")]
-        public void Put(string id, EventManagementModel value)
+        public void Put(Guid id, EventManagementModel value)
         {
-            foreach (var singleEvent in Events)
+            var singleEvent = Events.Single(@event => @event.Id == id);
+
+            if (value.Title != (default(EventTitle)))
             {
-                Console.WriteLine(singleEvent.Id);
-                if (singleEvent.Id.ToString() == id)
-                {
-                    if (value.Title != (default(EventTitle)))
-                    {
-                        singleEvent.Title = value.Title;
-                    }
-                    if (value.Description != (default(EventDescription)))
-                    {
-                        singleEvent.Description = value.Description;
-                    }
-                    if (value.EventLocation != (default(EventLocation)))
-                    {
-                        singleEvent.EventLocation = value.EventLocation;
-                    }
-                    if (value.EventStartDate != (default(EventStartDate)))
-                    {
-                        singleEvent.EventStartDate = value.EventStartDate;
-                    }
-                    if (value.EventEndDate != (default(EventEndDate)))
-                    {
-                        singleEvent.EventEndDate = value.EventEndDate;
-                    }
-                    if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
-                    {
-                        singleEvent.RegistrationOpenDate = value.RegistrationOpenDate;
-                    }
-                    if (value.RegistrationCloseDate != default(RegistrationCloseDate))
-                    {
-                        singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
-                    }
-                }
+                singleEvent.Title = value.Title;
             }
+            if (value.Description != (default(EventDescription)))
+            {
+                singleEvent.Description = value.Description;
+            }
+            if (value.EventLocation != (default(EventLocation)))
+            {
+                singleEvent.EventLocation = value.EventLocation;
+            }
+            if (value.EventStartDate != (default(EventStartDate)))
+            {
+                singleEvent.EventStartDate = value.EventStartDate;
+            }
+            if (value.EventEndDate != (default(EventEndDate)))
+            {
+                singleEvent.EventEndDate = value.EventEndDate;
+            }
+            if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
+            {
+                singleEvent.RegistrationOpenDate = value.RegistrationOpenDate;
+            }
+            if (value.RegistrationCloseDate != default(RegistrationCloseDate))
+            {
+                singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
+            }
+
         }
 
         // DELETE /v1/events/{id}
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public void Delete(Guid id)
         {
-            foreach (var singleEvent in Events)
-            {
-                if (singleEvent.Id.ToString() == id)
-                {
-                    Events.Remove(singleEvent);
-                    break;
-                }
-            }
+            Events.Remove(Events.Single(@event => @event.Id == id));
         }
     }
+
 }
