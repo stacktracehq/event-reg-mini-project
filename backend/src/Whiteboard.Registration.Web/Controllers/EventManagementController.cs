@@ -21,7 +21,7 @@ namespace Whiteboard.Registration.Web.Controllers
         public static List<EventManagementModel> Events { get; set; }  = new List<EventManagementModel>()
             {
                 new EventManagementModel(
-                    Guid.NewGuid(),
+                    new Guid("bcc3b1c4-e74c-4423-8c05-da1c2c8c5510"),
                     new EventTitle("Carlie's Amazing Event"),
                     new EventDescription("a wonderful event"),
                     new EventLocation("Stacktrace Headquarters"),
@@ -31,8 +31,8 @@ namespace Whiteboard.Registration.Web.Controllers
                     new RegistrationCloseDate(new DateTime(2019, 09, 29))),
 
                 new EventManagementModel(
-                    Guid.NewGuid(),
-                    new EventTitle("Another Great Thingy Event"),
+                    new Guid("4313f647-db66-42ce-b6da-8c659164dadf"),
+                    new EventTitle("Another Great Event Thingy"),
                     new EventDescription("here is the description"),
                     new EventLocation("New Shanghai"),
                     new EventStartDate(new DateTime(2020, 01, 13)),
@@ -63,18 +63,22 @@ namespace Whiteboard.Registration.Web.Controllers
 
         // GET /v1/events/{id}
         [HttpGet("{id}")]
-        public ActionResult<EventManagementModel> Get(int id)
+        public ActionResult<EventManagementModel> Get(string id)
         {
-            // return Events[id].Title.Value.ToString();
-            return Events[id];
+            foreach (var singleEvent in Events)
+            {
+                if (singleEvent.Id.ToString() == id)
+                {
+                    return singleEvent;
+                }
+            }
+            return null;
         }
 
         // POST /v1/events/
         [HttpPost]
-        // public void Post([FromBody] string value)
         public void Post(EventManagementModel value)
         {
-            // create a new event
             Events.Add(new EventManagementModel(
                 Guid.NewGuid(),
                 new EventTitle(value.Title.Value),
@@ -89,45 +93,59 @@ namespace Whiteboard.Registration.Web.Controllers
         }
 
         // PUT /v1/events/{id}
+        // This is actually what a patch does
         [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] EventManagementModel value)
-        public void Put(int id, EventManagementModel value)
+        public void Put(string id, EventManagementModel value)
         {
-            if (value.Title != (default(EventTitle)))
+            foreach (var singleEvent in Events)
             {
-                Events[id].Title = value.Title;
-            }
-            if (value.Description != (default(EventDescription)))
-            {
-            Events[id].Description = value.Description;
-            }
-            if (value.EventLocation != (default(EventLocation)))
-            {
-            Events[id].EventLocation = value.EventLocation;
-            }
-            if (value.EventStartDate != (default(EventStartDate)))
-            {
-            Events[id].EventStartDate = value.EventStartDate;
-            }
-            if (value.EventEndDate != (default(EventEndDate)))
-            {
-            Events[id].EventEndDate = value.EventEndDate;
-            }
-            if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
-            {
-            Events[id].RegistrationOpenDate = value.RegistrationOpenDate;
-            }
-            if (value.RegistrationCloseDate != default(RegistrationCloseDate))
-            {
-            Events[id].RegistrationCloseDate = value.RegistrationCloseDate;
+                Console.WriteLine(singleEvent.Id);
+                if (singleEvent.Id.ToString() == id)
+                {
+                    if (value.Title != (default(EventTitle)))
+                    {
+                        singleEvent.Title = value.Title;
+                    }
+                    if (value.Description != (default(EventDescription)))
+                    {
+                        singleEvent.Description = value.Description;
+                    }
+                    if (value.EventLocation != (default(EventLocation)))
+                    {
+                        singleEvent.EventLocation = value.EventLocation;
+                    }
+                    if (value.EventStartDate != (default(EventStartDate)))
+                    {
+                        singleEvent.EventStartDate = value.EventStartDate;
+                    }
+                    if (value.EventEndDate != (default(EventEndDate)))
+                    {
+                        singleEvent.EventEndDate = value.EventEndDate;
+                    }
+                    if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
+                    {
+                        singleEvent.RegistrationOpenDate = value.RegistrationOpenDate;
+                    }
+                    if (value.RegistrationCloseDate != default(RegistrationCloseDate))
+                    {
+                        singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
+                    }
+                }
             }
         }
 
         // DELETE /v1/events/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
-            Events.RemoveAt(id);
+            foreach (var singleEvent in Events)
+            {
+                if (singleEvent.Id.ToString() == id)
+                {
+                    Events.Remove(singleEvent);
+                    break;
+                }
+            }
         }
     }
 }
