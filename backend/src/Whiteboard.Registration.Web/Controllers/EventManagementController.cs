@@ -44,14 +44,15 @@ namespace Whiteboard.Registration.Web.Controllers
 
         // GET /v1/events/
         [HttpGet]
-        public ActionResult<IEnumerable<EventManagementDto>> Get()
+        public ActionResult<IEnumerable<EventManagementDto>> Get(string title)
         {
             return Events
                 .Select(@event =>
-                    new EventManagementDto {
-                        Id = @event.Id,
-                        Title = @event.Title.Value
-                    })
+                        new EventManagementDto {
+                            Id = @event.Id,
+                            Title = @event.Title.Value
+                        })
+                .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower()))
                 .ToList();
         }
 
