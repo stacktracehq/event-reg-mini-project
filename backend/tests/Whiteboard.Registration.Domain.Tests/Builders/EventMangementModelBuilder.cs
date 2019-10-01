@@ -8,6 +8,7 @@ namespace Whiteboard.Registration.Domain.Tests.Builders
         public static EventManagementModel Build()
         {
             return new EventManagementModel(
+                Guid.NewGuid(),
                 new EventTitle("Carlies Super Duper Event"),
                 new EventDescription("event description"),
                 new EventLocation("event location"),
