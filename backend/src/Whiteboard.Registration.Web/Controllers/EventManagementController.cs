@@ -27,23 +27,25 @@ namespace Whiteboard.Registration.Web.Controllers
         public List<EventManagementModel> Events = new List<EventManagementModel>();
         public Task Delete(Guid id)
         {
-            return Task.Factory.StartNew(() => (Events.Remove(Events.Single(@event => @event.Id == id))));
+            Events.Remove(Events.Single(@event => @event.Id == id));
+            return Task.CompletedTask;
         }
 
         public Task<EventManagementModel> Get(Guid id)
         {
-            return Task.Factory.StartNew(() => Events.Single(@event => @event.Id == id));
+            return Task.FromResult(Events.Single(@event => @event.Id == id));
         }
 
         public Task<IEnumerable<EventManagementDto>> GetAll(string title)
         {
-            return Task.Factory.StartNew(() => Events
-                .Select(@event =>
-                        new EventManagementDto {
-                            Id = @event.Id,
-                            Title = @event.Title.Value
-                        })
-                .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower())));
+            return Task.FromResult(
+                Events
+                    .Select(@event =>
+                            new EventManagementDto {
+                                Id = @event.Id,
+                                Title = @event.Title.Value
+                            })
+                    .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower())));
         }
 
         // put
@@ -51,8 +53,7 @@ namespace Whiteboard.Registration.Web.Controllers
         {
             var singleEvent = Events.Single(@event => @event.Id == id);
 
-            return Task.Factory.StartNew(() =>
-            { if (value.Title != (default(EventTitle)))
+            if (value.Title != (default(EventTitle)))
             {
                 singleEvent.Title = value.Title;
             }
@@ -79,13 +80,15 @@ namespace Whiteboard.Registration.Web.Controllers
             if (value.RegistrationCloseDate != default(RegistrationCloseDate))
             {
                 singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
-            }});
+            }
+
+            return Task.CompletedTask;
         }
 
         // This is like a post
         public Task Update(EventManagementModel value)
         {
-            return Task.Factory.StartNew(() => Events.Add(
+            Events.Add(
                 new EventManagementModel(
                 Guid.NewGuid(),
                 new EventTitle(value.Title.Value),
@@ -94,8 +97,9 @@ namespace Whiteboard.Registration.Web.Controllers
                 new EventStartDate(value.EventStartDate.Value),
                 new EventEndDate(value.EventEndDate.Value),
                 new RegistrationOpenDate(value.RegistrationOpenDate.Value),
-                new RegistrationCloseDate(value.RegistrationCloseDate.Value))));
+                new RegistrationCloseDate(value.RegistrationCloseDate.Value)));
 
+                return Task.CompletedTask;
                 // Console.WriteLine(Events.Count);
         }
     }
@@ -105,11 +109,11 @@ namespace Whiteboard.Registration.Web.Controllers
     [ApiController]
     public class EventManagementController : ControllerBase
     {
-        private readonly IEventManagementRepo _repo;
+        private static readonly IEventManagementRepo _repo = CreateRepo();
 
-        public EventManagementController() {
-            _repo = new InMemoryEventManagementRepo();
-            _repo.Update(
+        private static IEventManagementRepo CreateRepo() {
+            var repo = new InMemoryEventManagementRepo();
+            repo.Update(
                 new EventManagementModel(
                 new Guid("bcc3b1c4-e74c-4423-8c05-da1c2c8c5510"),
                 new EventTitle("Carlie's Amazing Event"),
@@ -119,7 +123,7 @@ namespace Whiteboard.Registration.Web.Controllers
                 new EventEndDate(new DateTime(2019, 10, 20)),
                 new RegistrationOpenDate(new DateTime(2019, 09, 22)),
                 new RegistrationCloseDate(new DateTime(2019, 09, 29))));
-            _repo.Update(
+            repo.Update(
                  new EventManagementModel(
                 new Guid("4313f647-db66-42ce-b6da-8c659164dadf"),
                 new EventTitle("A great event"),
@@ -130,6 +134,10 @@ namespace Whiteboard.Registration.Web.Controllers
                 new RegistrationOpenDate(new DateTime(2019, 12, 13)),
                 new RegistrationCloseDate(new DateTime(2020, 01, 07)))
             );
+            return repo;
+        }
+
+        public EventManagementController() {
         }
 
 
