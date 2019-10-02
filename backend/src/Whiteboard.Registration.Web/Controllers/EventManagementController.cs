@@ -13,81 +13,46 @@ namespace Whiteboard.Registration.Web.Controllers
         public string Title { get; set; }
     }
 
-    // [Route("[controller]")]
-    [Route("v1/events")]
-    [ApiController]
-    public class EventManagementController : ControllerBase
+    public interface IEventManagementRepo {
+
+        Task<IEnumerable<EventManagementDto>> GetAll(string title);
+        Task<EventManagementModel> Get(Guid id);
+        Task Update(Guid id, EventManagementModel value);
+        Task Update(EventManagementModel value);
+        Task Delete(Guid id);
+    }
+
+    public class InMemoryEventManagementRepo : IEventManagementRepo
     {
-        public static List<EventManagementModel> Events { get; set; }  = new List<EventManagementModel>()
-            {
-                new EventManagementModel(
-                    new Guid("bcc3b1c4-e74c-4423-8c05-da1c2c8c5510"),
-                    new EventTitle("Carlie's Amazing Event"),
-                    new EventDescription("a wonderful event"),
-                    new EventLocation("Stacktrace Headquarters"),
-                    new EventStartDate(new DateTime(2019, 09,30)),
-                    new EventEndDate(new DateTime(2019, 10, 20)),
-                    new RegistrationOpenDate(new DateTime(2019, 09, 22)),
-                    new RegistrationCloseDate(new DateTime(2019, 09, 29))),
-
-                new EventManagementModel(
-                    new Guid("4313f647-db66-42ce-b6da-8c659164dadf"),
-                    new EventTitle("Another Great Event Thingy"),
-                    new EventDescription("here is the description"),
-                    new EventLocation("New Shanghai"),
-                    new EventStartDate(new DateTime(2020, 01, 13)),
-                    new EventEndDate(new DateTime(2020, 02, 01)),
-                    new RegistrationOpenDate(new DateTime(2019, 12, 13)),
-                    new RegistrationCloseDate(new DateTime(2020, 01, 07))),
-            };
-
-
-        // GET /v1/events/
-        [HttpGet]
-        public ActionResult<IEnumerable<EventManagementDto>> Get(string title)
+        public List<EventManagementModel> Events = new List<EventManagementModel>();
+        public Task Delete(Guid id)
         {
-            return Events
+            return Task.Factory.StartNew(() => (Events.Remove(Events.Single(@event => @event.Id == id))));
+        }
+
+        public Task<EventManagementModel> Get(Guid id)
+        {
+            return Task.Factory.StartNew(() => Events.Single(@event => @event.Id == id));
+        }
+
+        public Task<IEnumerable<EventManagementDto>> GetAll(string title)
+        {
+            return Task.Factory.StartNew(() => Events
                 .Select(@event =>
                         new EventManagementDto {
                             Id = @event.Id,
                             Title = @event.Title.Value
                         })
-                .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower()))
-                .ToList();
+                .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower())));
         }
 
-        // GET /v1/events/{id}
-        [HttpGet("{id}")]
-        public ActionResult<EventManagementModel> Get(Guid id)
-        {
-            return Events.Single(@event => @event.Id == id);
-        }
-
-        // POST /v1/events/
-        [HttpPost]
-        public void Post(EventManagementModel value)
-        {
-            Events.Add(new EventManagementModel(
-                Guid.NewGuid(),
-                new EventTitle(value.Title.Value),
-                new EventDescription(value.Description.Value),
-                new EventLocation(value.EventLocation.Value),
-                new EventStartDate(value.EventStartDate.Value),
-                new EventEndDate(value.EventEndDate.Value),
-                new RegistrationOpenDate(value.RegistrationOpenDate.Value),
-                new RegistrationCloseDate(value.RegistrationCloseDate.Value)));
-
-                Console.WriteLine(Events.Count);
-        }
-
-        // PUT /v1/events/{id}
-        // This is actually what a patch does
-        [HttpPut("{id}")]
-        public void Put(Guid id, EventManagementModel value)
+        // put
+        public Task Update(Guid id, EventManagementModel value)
         {
             var singleEvent = Events.Single(@event => @event.Id == id);
 
-            if (value.Title != (default(EventTitle)))
+            return Task.Factory.StartNew(() =>
+            { if (value.Title != (default(EventTitle)))
             {
                 singleEvent.Title = value.Title;
             }
@@ -114,15 +79,94 @@ namespace Whiteboard.Registration.Web.Controllers
             if (value.RegistrationCloseDate != default(RegistrationCloseDate))
             {
                 singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
-            }
+            }});
+        }
 
+        // This is like a post
+        public Task Update(EventManagementModel value)
+        {
+            return Task.Factory.StartNew(() => Events.Add(
+                new EventManagementModel(
+                Guid.NewGuid(),
+                new EventTitle(value.Title.Value),
+                new EventDescription(value.Description.Value),
+                new EventLocation(value.EventLocation.Value),
+                new EventStartDate(value.EventStartDate.Value),
+                new EventEndDate(value.EventEndDate.Value),
+                new RegistrationOpenDate(value.RegistrationOpenDate.Value),
+                new RegistrationCloseDate(value.RegistrationCloseDate.Value))));
+
+                // Console.WriteLine(Events.Count);
+        }
+    }
+
+    // [Route("[controller]")]
+    [Route("v1/events")]
+    [ApiController]
+    public class EventManagementController : ControllerBase
+    {
+        private readonly IEventManagementRepo _repo;
+
+        public EventManagementController() {
+            _repo = new InMemoryEventManagementRepo();
+            _repo.Update(
+                new EventManagementModel(
+                new Guid("bcc3b1c4-e74c-4423-8c05-da1c2c8c5510"),
+                new EventTitle("Carlie's Amazing Event"),
+                new EventDescription("a wonderful event"),
+                new EventLocation("Stacktrace Headquarters"),
+                new EventStartDate(new DateTime(2019, 09,30)),
+                new EventEndDate(new DateTime(2019, 10, 20)),
+                new RegistrationOpenDate(new DateTime(2019, 09, 22)),
+                new RegistrationCloseDate(new DateTime(2019, 09, 29))));
+            _repo.Update(
+                 new EventManagementModel(
+                new Guid("4313f647-db66-42ce-b6da-8c659164dadf"),
+                new EventTitle("A great event"),
+                new EventDescription("here is the description"),
+                new EventLocation("New Shanghai"),
+                new EventStartDate(new DateTime(2020, 01, 13)),
+                new EventEndDate(new DateTime(2020, 02, 01)),
+                new RegistrationOpenDate(new DateTime(2019, 12, 13)),
+                new RegistrationCloseDate(new DateTime(2020, 01, 07)))
+            );
+        }
+
+
+        // GET /v1/events/
+        [HttpGet]
+        public Task<IEnumerable<EventManagementDto>> Get(string title)
+        {
+            return _repo.GetAll(title);
+        }
+
+        // GET /v1/events/{id}
+        [HttpGet("{id}")]
+        public Task<EventManagementModel> Get(Guid id)
+        {
+            return _repo.Get(id);
+        }
+
+        // POST /v1/events/
+        [HttpPost]
+        public void Post(EventManagementModel value)
+        {
+            _repo.Update(value);
+        }
+
+        // PUT /v1/events/{id}
+        // This is actually what a patch does
+        [HttpPut("{id}")]
+        public void Put(Guid id, EventManagementModel value)
+        {
+            _repo.Update(id, value);
         }
 
         // DELETE /v1/events/{id}
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
-            Events.Remove(Events.Single(@event => @event.Id == id));
+            _repo.Delete(id);
         }
     }
 
