@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using Whiteboard.Registration.Web.Services;
 
 namespace Whiteboard.Registration.Web
@@ -21,7 +23,7 @@ namespace Whiteboard.Registration.Web
         {
             services
                 .AddSingleton<IEventManagementRepo, InMemoryEventManagementRepo>()
-                .AddMvc()
+                .AddMvc().AddJsonOptions(options => options.SerializerSettings.Error += (target, args) => Console.WriteLine(args.ErrorContext.ToString()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
