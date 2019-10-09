@@ -5,7 +5,7 @@ using Whiteboard.Registration.Domain.Tiny;
 {
     public class EventManagementModel
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
         public EventTitle Title { get; set; }
         public EventDescription Description { get; set; }
         public EventLocation EventLocation { get; set;}
