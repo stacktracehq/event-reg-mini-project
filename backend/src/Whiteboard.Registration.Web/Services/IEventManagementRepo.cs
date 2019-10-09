@@ -10,8 +10,8 @@ namespace Whiteboard.Registration.Web.Services
 
         Task<IEnumerable<EventManagementDto>> GetAll(string title);
         Task<EventManagementModel> Get(Guid id);
-        Task Update(Guid id, EventManagementModel value);
         Task Update(EventManagementModel value);
+        Task Add(EventManagementModel value);
         Task Delete(Guid id);
     }
 

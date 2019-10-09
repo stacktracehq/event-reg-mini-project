@@ -21,6 +21,7 @@ namespace Whiteboard.Registration.Web.Services
         public Task<EventManagementModel> Get(Guid id)
         {
             return Task.FromResult(Events.Single(@event => @event.Id == id));
+
         }
 
         public Task<IEnumerable<EventManagementDto>> GetAll(string title)
@@ -35,59 +36,26 @@ namespace Whiteboard.Registration.Web.Services
                     .Where(@event => title == null || @event.Title.ToLower().Contains(title.ToLower())));
         }
 
-        // put
-        public Task Update(Guid id, EventManagementModel value)
+        // Put
+        public Task Update(EventManagementModel value)
         {
-            var singleEvent = Events.Single(@event => @event.Id == id);
+            var singleEvent = Events.SingleOrDefault(@event => @event.Id == value.Id);
 
-            if (value.Title != (default(EventTitle)))
-            {
-                singleEvent.Title = value.Title;
-            }
-            if (value.Description != (default(EventDescription)))
-            {
-                singleEvent.Description = value.Description;
-            }
-            if (value.EventLocation != (default(EventLocation)))
-            {
-                singleEvent.EventLocation = value.EventLocation;
-            }
-            if (value.EventStartDate != (default(EventStartDate)))
-            {
-                singleEvent.EventStartDate = value.EventStartDate;
-            }
-            if (value.EventEndDate != (default(EventEndDate)))
-            {
-                singleEvent.EventEndDate = value.EventEndDate;
-            }
-            if (value.RegistrationOpenDate != (default(RegistrationOpenDate)))
-            {
-                singleEvent.RegistrationOpenDate = value.RegistrationOpenDate;
-            }
-            if (value.RegistrationCloseDate != default(RegistrationCloseDate))
-            {
-                singleEvent.RegistrationCloseDate = value.RegistrationCloseDate;
-            }
+            if (singleEvent != null)
+                Events.Remove(singleEvent);
 
+            Events.Add(value);
             return Task.CompletedTask;
         }
 
-        // This is like a post
-        public Task Update(EventManagementModel value)
+        // Post
+        public Task Add(EventManagementModel value)
         {
             Events.Add(
-                new EventManagementModel(
-                Guid.NewGuid(),
-                new EventTitle(value.Title.Value),
-                new EventDescription(value.Description.Value),
-                new EventLocation(value.EventLocation.Value),
-                new EventStartDate(value.EventStartDate.Value),
-                new EventEndDate(value.EventEndDate.Value),
-                new RegistrationOpenDate(value.RegistrationOpenDate.Value),
-                new RegistrationCloseDate(value.RegistrationCloseDate.Value)));
+                value.With(id: Guid.NewGuid())
+                );
 
-                return Task.CompletedTask;
-                // Console.WriteLine(Events.Count);
+            return Task.CompletedTask;
         }
     }
 
