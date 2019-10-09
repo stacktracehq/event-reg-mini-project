@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Whiteboard.Registration.Web\Whiteboard.Registration.Web.csproj" />
     <ProjectReference Include="..\..\src\Whiteboard.Registration.Domain\Whiteboard.Registration.Domain.csproj" />
+    <ProjectReference Include="..\..\tests\Whiteboard.Registration.Domain.Tests\Whiteboard.Registration.Domain.Tests.csproj" />
   </ItemGroup>
 
 </Project>
