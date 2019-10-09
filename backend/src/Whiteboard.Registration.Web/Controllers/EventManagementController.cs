@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Whiteboard.Registration.Domain;
@@ -26,39 +27,51 @@ namespace Whiteboard.Registration.Web.Controllers
 
         // GET /v1/events/
         [HttpGet]
-        public Task<IEnumerable<EventManagementDto>> Get(string title)
+        public async Task<ActionResult<IEnumerable<EventManagementDto>>> Get(string title)
         {
-            return _repo.GetAll(title);
+            var dtos = await _repo.GetAll(title);
+            return new ActionResult<IEnumerable<EventManagementDto>>(dtos);
         }
 
         // GET /v1/events/{id}
         [HttpGet("{id}")]
-        public Task<EventManagementModel> Get(Guid id)
+        public async Task<ActionResult<EventManagementModel>> Get(Guid id)
         {
-            return _repo.Get(id);
+            try
+            {
+                var dto = await _repo.Get(id);
+                return new ActionResult<EventManagementModel>(dto);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
         }
 
         // POST /v1/events/
         [HttpPost]
-        public void Post(EventManagementModel value)
+        public Task Post(EventManagementModel value)
         {
-            _repo.Update(value);
+            return _repo.Add(value);
         }
 
         // PUT /v1/events/{id}
         // This is actually what a patch does
         [HttpPut("{id}")]
-        public void Put(Guid id, EventManagementModel value)
+        public async Task<ActionResult> Put(Guid id, EventManagementModel value)
         {
-            _repo.Update(id, value);
+            if (value.Id == id)
+                return BadRequest();
+            await _repo.Update(value);
+            return Ok();
         }
 
         // DELETE /v1/events/{id}
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public Task Delete(Guid id)
         {
-            _repo.Delete(id);
+            return _repo.Delete(id);
         }
     }
-
 }
