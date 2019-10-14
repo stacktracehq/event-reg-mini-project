@@ -25,26 +25,23 @@ namespace Whiteboard.Registration.Web.Services
 
         }
 
-        private IDbConnection GetConnection()
-        {
-                return new NpgsqlConnection(_connectionString);
-        }
+        private IDbConnection GetConnection() => new NpgsqlConnection(_connectionString);
 
-        public Task Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            using (IDbConnection dbConnection = GetConnection())
+            using (var dbConnection = GetConnection())
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync(
+                await dbConnection.ExecuteAsync(
                         "DELETE FROM event_management WHERE id = @Id",
-                        new { Id = id}
+                        new { Id = id }
                 );
             }
         }
 
         public async Task<EventManagementModel> Get(Guid id)
         {
-            using (IDbConnection dbConnection = GetConnection())
+            using (var dbConnection = GetConnection())
             {
                 dbConnection.Open();
                 var value = await dbConnection.QueryFirstOrDefaultAsync(
@@ -64,52 +61,48 @@ namespace Whiteboard.Registration.Web.Services
         }
 
         // GET /v1/events/
-        public Task<IEnumerable<EventManagementDto>> GetAll(string title)
+        public async Task<IEnumerable<EventManagementDto>> GetAll(string title)
         {
-            using (IDbConnection dbConnection = GetConnection())
+            using (var dbConnection = GetConnection())
             {
                 dbConnection.Open();
-                var events = dbConnection.Query(
-                        "SELECT * FROM event_management WHERE @Title IS NULL OR LOWER(title) LIKE LOWER('%' || @Title || '%')",
-                        new {Title = title}
-                );
-                var listOfEvents = new List<EventManagementModel>();
-                foreach (var @event in events)
-                {
-                    listOfEvents.Add(new EventManagementModel(
-                    id:@event.id,
-                    title:new EventTitle(@event.title),
-                    description:new EventDescription(@event.description),
-                    eventLocation:new EventLocation(@event.event_location),
-                    eventStartDate: new EventStartDate(@event.event_start_date),
-                    eventEndDate: new EventEndDate(@event.event_end_date),
-                    registrationOpenDate:new RegistrationOpenDate(@event.registration_open_date),
-                    registrationCloseDate:new RegistrationCloseDate(@event.registration_close_date)));
-                }
+                var events = (await dbConnection.QueryAsync(
+                        "SELECT id, title FROM event_management WHERE @Title IS NULL OR LOWER(title) LIKE LOWER('%' || @Title || '%')",
+                        new { Title = title }
+                )).ToList();
 
-                var eventDTO = new List<EventManagementDto>();
-                foreach (var @event in listOfEvents)
-                {
-                    eventDTO.Add(new EventManagementDto{
-                        Id = @event.Id,
-                        Title = @event.Title.Value
-                    });
-                }
-                return Task.FromResult(eventDTO.AsEnumerable());
+                return events
+                        .Select(@event =>
+                            new EventManagementDto {
+                                Id = @event.id,
+                                Title = @event.title
+                            })
+                        .ToList()
+                        .AsEnumerable();
             }
-
         }
 
         // Put
         public Task Update(EventManagementModel value)
         {
-            using (IDbConnection dbConnection = GetConnection())
+            using (var dbConnection = GetConnection())
             {
                 dbConnection.Open();
                 return Task.FromResult(
                     dbConnection.Query(
-                        "UPDATE event_management SET title = @Title, description = @Description, event_location = @EventLocation, event_start_date = @EventStartDate, event_end_date = @EventEndDate, registration_open_date = @RegistrationOpenDate, registration_close_date = @RegistrationCloseDate WHERE id = @Id",
-                        new {Id=value.Id, Title =value.Title.Value, Description = value.Description.Value, EventLocation = value.EventLocation.Value, EventStartDate = value.EventStartDate.Value, EventEndDate = value.EventEndDate.Value, RegistrationOpenDate = value.RegistrationOpenDate.Value, RegistrationCloseDate = value.RegistrationCloseDate.Value}
+                        @"UPDATE event_management
+                        SET title = @Title, description = @Description, event_location = @EventLocation, event_start_date = @EventStartDate, event_end_date = @EventEndDate, registration_open_date = @RegistrationOpenDate, registration_close_date = @RegistrationCloseDate
+                        WHERE id = @Id",
+                        new {
+                            Id=value.Id,
+                            Title =value.Title.Value,
+                            Description = value.Description.Value,
+                            EventLocation = value.EventLocation.Value,
+                            EventStartDate = value.EventStartDate.Value,
+                            EventEndDate = value.EventEndDate.Value,
+                            RegistrationOpenDate = value.RegistrationOpenDate.Value,
+                            RegistrationCloseDate = value.RegistrationCloseDate.Value
+                        }
                     ));
             }
 
@@ -118,12 +111,13 @@ namespace Whiteboard.Registration.Web.Services
         // Post
         public Task Add(EventManagementModel value)
         {
-            using (IDbConnection dbConnection = GetConnection())
+            using (var dbConnection = GetConnection())
             {
                 dbConnection.Open();
                 return Task.FromResult(
                     dbConnection.Execute(
-                        "INSERT INTO event_management (id, title, description, event_location, event_start_date, event_end_date, registration_open_date, registration_close_date) VALUES(@Id, @Title, @Description, @EventLocation, @EventStartDate, @EventEndDate, @RegistrationOpenDate, @RegistrationCloseDate)",
+                        @"INSERT INTO event_management (id, title, description, event_location, event_start_date, event_end_date, registration_open_date, registration_close_date)
+                        VALUES(@Id, @Title, @Description, @EventLocation, @EventStartDate, @EventEndDate, @RegistrationOpenDate, @RegistrationCloseDate)",
                         new {Id=value.Id, Title =value.Title.Value, Description = value.Description.Value, EventLocation = value.EventLocation.Value, EventStartDate = value.EventStartDate.Value, EventEndDate = value.EventEndDate.Value, RegistrationOpenDate = value.RegistrationOpenDate.Value, RegistrationCloseDate = value.RegistrationCloseDate.Value}
                 ));
             }
