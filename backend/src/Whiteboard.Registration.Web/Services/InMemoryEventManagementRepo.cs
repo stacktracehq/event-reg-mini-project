@@ -20,7 +20,7 @@ namespace Whiteboard.Registration.Web.Services
 
         public Task<EventManagementModel> Get(Guid id)
         {
-            return Task.FromResult(Events.Single(@event => @event.Id == id));
+            return Task.FromResult(Events.FirstOrDefault(@event => @event.Id == id));
 
         }
 

@@ -37,15 +37,10 @@ namespace Whiteboard.Registration.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EventManagementModel>> Get(Guid id)
         {
-            try
-            {
                 var dto = await _repo.Get(id);
+                if (dto == null)
+                    return NotFound();
                 return new ActionResult<EventManagementModel>(dto);
-            }
-            catch
-            {
-                return NotFound();
-            }
 
         }
 
@@ -57,11 +52,10 @@ namespace Whiteboard.Registration.Web.Controllers
         }
 
         // PUT /v1/events/{id}
-        // This is actually what a patch does
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(Guid id, EventManagementModel value)
         {
-            if (value.Id == id)
+            if (value.Id != id)
                 return BadRequest();
             await _repo.Update(value);
             return Ok();

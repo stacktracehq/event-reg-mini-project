@@ -39,6 +39,9 @@ using Whiteboard.Registration.Domain.Tiny;
             RegistrationOpenDate = registrationOpenDate;
             RegistrationCloseDate = registrationCloseDate;
         }
+        public EventManagementModel()
+        {
+        }
 
         public EventManagementModel With(
             Guid? id = null,
