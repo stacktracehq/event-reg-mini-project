@@ -22,7 +22,7 @@ namespace Whiteboard.Registration.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddSingleton<IEventManagementRepo, InMemoryEventManagementRepo>()
+                .AddSingleton<IEventManagementRepo, PostgresEventManagementRepo>()
                 .AddMvc().AddJsonOptions(options => options.SerializerSettings.Error += (target, args) => Console.WriteLine(args.ErrorContext.ToString()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
