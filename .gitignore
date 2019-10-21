@@ -1,6 +1,7 @@
 *.swp
 *.*~
 project.lock.json
+
 .DS_Store
 *.pyc
 nupkg/
@@ -35,4 +36,8 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+# Logs
+logs
+*.log
 
