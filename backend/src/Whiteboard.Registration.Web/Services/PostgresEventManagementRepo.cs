@@ -115,9 +115,12 @@ namespace Whiteboard.Registration.Web.Services
                 dbConnection.Open();
                 return Task.FromResult(
                     dbConnection.Execute(
-                        @"INSERT INTO event_management (id, title, description, event_location, event_start_date, event_end_date, registration_open_date, registration_close_date)
-                        VALUES(@Id, @Title, @Description, @EventLocation, @EventStartDate, @EventEndDate, @RegistrationOpenDate, @RegistrationCloseDate)",
-                        new {Id=value.Id, Title =value.Title.Value, Description = value.Description.Value, EventLocation = value.EventLocation.Value, EventStartDate = value.EventStartDate.Value, EventEndDate = value.EventEndDate.Value, RegistrationOpenDate = value.RegistrationOpenDate.Value, RegistrationCloseDate = value.RegistrationCloseDate.Value}
+                        @"INSERT INTO event_management (title)
+                        VALUES(@Title)",
+                        new {Title =value.Title.Value}
+                        //  @"INSERT INTO event_management (id, title, description, event_location, event_start_date, event_end_date, registration_open_date, registration_close_date)
+                        // VALUES(@Id, @Title, @Description, @EventLocation, @EventStartDate, @EventEndDate, @RegistrationOpenDate, @RegistrationCloseDate)",
+                        // new {Id=value.Id, Title =value.Title.Value, Description = value.Description.Value, EventLocation = value.EventLocation.Value, EventStartDate = value.EventStartDate.Value, EventEndDate = value.EventEndDate.Value, RegistrationOpenDate = value.RegistrationOpenDate.Value, RegistrationCloseDate = value.RegistrationCloseDate.Value}
                 ));
             }
         }

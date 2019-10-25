@@ -23,6 +23,13 @@ namespace Whiteboard.Registration.Web
         {
             services
                 .AddSingleton<IEventManagementRepo, PostgresEventManagementRepo>()
+                .AddCors((options =>
+                    {
+                        options.AddPolicy("AllowSpecificOrigin",
+                            builder => builder.WithOrigins("http://localhost:3000")
+                                              .AllowAnyHeader()
+                                              .AllowAnyMethod());
+                    }))
                 .AddMvc().AddJsonOptions(options => options.SerializerSettings.Error += (target, args) => Console.WriteLine(args.ErrorContext.ToString()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -40,6 +47,7 @@ namespace Whiteboard.Registration.Web
                 app.UseHsts();
             }
 
+            app.UseCors("AllowSpecificOrigin");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
