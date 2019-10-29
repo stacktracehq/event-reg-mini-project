@@ -1,5 +1,6 @@
 import React from "react";
 import axios from 'axios';
+import { Guid } from "guid-typescript";
 
 export interface EventTitle {
     value: string
@@ -22,7 +23,7 @@ export interface EventEndDate {
 }
 
 export interface Values {
-    id: string,
+    id: Guid,
     title: EventTitle,
     description: EventDescription,
     eventLocation: EventLocation,
@@ -40,7 +41,7 @@ export class Form extends React.Component<{}, FormState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            id: "11fab6a1-facc-42de-9622-e5f2ffcceb88",
+            id: Guid.create(),
             title: {value: ""},
             description: {value: ""},
             eventLocation: {value: ""},
@@ -54,7 +55,7 @@ export class Form extends React.Component<{}, FormState> {
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = {
-            id: this.state.id,
+            id: this.state.id.value,
             title: {value: this.state.title},
             description: {value: this.state.description},
             eventLocation: {value: this.state.eventLocation},
@@ -66,6 +67,7 @@ export class Form extends React.Component<{}, FormState> {
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
         console.log("~*~ Form Details ~*~")
+        console.log("Id: " + this.state.id);
         console.log("Event Name: " + this.state.title);
         console.log("Description: " + this.state.description);
         console.log("Location: " + this.state.eventLocation);
