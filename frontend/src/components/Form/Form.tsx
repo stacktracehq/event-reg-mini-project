@@ -15,25 +15,20 @@ export interface EventLocation {
 }
 
 export interface EventStartDate {
-    value: Date
+    value: Date | string
 }
 
 export interface EventEndDate {
-    value: Date
+    value: Date | string
 }
 
-export interface Values {
-    id: Guid,
+export interface FormState {
     title: EventTitle,
     description: EventDescription,
     eventLocation: EventLocation,
     eventStartDate: EventStartDate,
     eventEndDate: EventEndDate,
-}
-
-export interface FormState {
     [key: string]: any;
-    values: Values[];
     submitSuccess: boolean;
 }
 
@@ -47,7 +42,6 @@ export class Form extends React.Component<{}, FormState> {
             eventLocation: {value: ""},
             eventStartDate: {value: ""},
             eventEndDate: {value: ""},
-            values: [],
             submitSuccess: false,
         }
     }
@@ -62,9 +56,11 @@ export class Form extends React.Component<{}, FormState> {
             eventStartDate: {value: this.state.eventStartDate},
             eventEndDate: {value: this.state.eventEndDate},
         }
-        this.setState({ submitSuccess: true, values: [...this.state.values, formData]});
         await axios.post(`https://localhost:5001/v1/events`, formData)
-                .then(response => console.log(response))
+                .then(response => {
+                    console.log(response);
+                    this.setState({ submitSuccess: true});
+                })
                 .catch(error => console.log(error));
         console.log("~*~ Form Details ~*~")
         console.log("Id: " + this.state.id);
@@ -77,10 +73,10 @@ export class Form extends React.Component<{}, FormState> {
     }
 
     private handleInputChanges = (e: React.FormEvent<HTMLInputElement>) => {
-        e.preventDefault();
+        const { name, value } = e.currentTarget;
         this.setState({
-            [e.currentTarget.name]: e.currentTarget.value,
-        })
+            [name]:value
+        } as Pick<FormState, keyof FormState>);
     }
 
     public render() {
@@ -88,7 +84,7 @@ export class Form extends React.Component<{}, FormState> {
         return (
             <div>
                 <h2>Create a New Event</h2>
-                {!submitSuccess && (
+               {!submitSuccess && (
                       <div className="alert alert-info" role="alert">
                           Fill the form below to create a new event
                   </div>
