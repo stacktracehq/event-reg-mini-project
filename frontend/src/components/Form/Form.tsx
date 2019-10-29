@@ -14,11 +14,20 @@ export interface EventLocation {
     value: string
 }
 
+// These have string for the constructor - need to fix!
 export interface EventStartDate {
     value: Date | string
 }
 
 export interface EventEndDate {
+    value: Date | string
+}
+
+export interface RegistrationOpenDate {
+    value: Date | string
+}
+
+export interface RegistrationCloseDate {
     value: Date | string
 }
 
@@ -28,6 +37,8 @@ export interface FormState {
     eventLocation: EventLocation,
     eventStartDate: EventStartDate,
     eventEndDate: EventEndDate,
+    registrationOpenDate: RegistrationOpenDate,
+    registrationCloseDate: RegistrationCloseDate,
     [key: string]: any;
     submitSuccess: boolean;
 }
@@ -42,6 +53,8 @@ export class Form extends React.Component<{}, FormState> {
             eventLocation: {value: ""},
             eventStartDate: {value: ""},
             eventEndDate: {value: ""},
+            registrationOpenDate: {value: ""},
+            registrationCloseDate: {value: ""},
             submitSuccess: false,
         }
     }
@@ -55,6 +68,8 @@ export class Form extends React.Component<{}, FormState> {
             eventLocation: {value: this.state.eventLocation},
             eventStartDate: {value: this.state.eventStartDate},
             eventEndDate: {value: this.state.eventEndDate},
+            registrationOpenDate: {value: this.state.registrationOpenDate},
+            registrationCloseDate: {value: this.state.registrationCloseDate},
         }
         await axios.post(`https://localhost:5001/v1/events`, formData)
                 .then(response => {
@@ -69,6 +84,8 @@ export class Form extends React.Component<{}, FormState> {
         console.log("Location: " + this.state.eventLocation);
         console.log("Event Start Date: " + this.state.eventStartDate);
         console.log("Event End Date: " + this.state.eventEndDate);
+        console.log("Registration Open Date: " + this.state.registrationOpenDate);
+        console.log("Registration Close Date: " + this.state.registrationCloseDate);
         console.log(formData);
     }
 
@@ -145,6 +162,28 @@ export class Form extends React.Component<{}, FormState> {
                             placeholder=""
                         />
                     </div>
+
+                    <div>
+                        <label htmlFor="registrationOpenDate">Registration Open Date: </label>
+                        <input
+                            type="date"
+                            id="registrationOpenDate"
+                            onChange={(e) => this.handleInputChanges(e)}
+                            name="registrationOpenDate"
+                            placeholder=""
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="registrationCloseDate">Registration Close Date: </label>
+                        <input
+                            type="date"
+                            id="registrationCloseDate"
+                            onChange={(e) => this.handleInputChanges(e)}
+                            name="registrationCloseDate"
+                            placeholder=""
+                        />
+                    </div>
+
                     <div>
                         <button type="submit">
                             Create an Event
