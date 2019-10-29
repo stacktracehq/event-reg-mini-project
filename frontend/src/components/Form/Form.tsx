@@ -41,6 +41,7 @@ export interface FormState {
     registrationCloseDate: RegistrationCloseDate,
     [key: string]: any;
     submitSuccess: boolean;
+    errors: boolean;
 }
 
 export class Form extends React.Component<{}, FormState> {
@@ -56,6 +57,7 @@ export class Form extends React.Component<{}, FormState> {
             registrationOpenDate: {value: ""},
             registrationCloseDate: {value: ""},
             submitSuccess: false,
+            errors: false,
         }
     }
 
@@ -76,7 +78,10 @@ export class Form extends React.Component<{}, FormState> {
                     console.log(response);
                     this.setState({ submitSuccess: true});
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    console.log(error);
+                    this.setState({ errors: true });
+                });
         console.log("~*~ Form Details ~*~")
         console.log("Id: " + this.state.id);
         console.log("Event Name: " + this.state.title);
@@ -98,7 +103,7 @@ export class Form extends React.Component<{}, FormState> {
     }
 
     public render() {
-        const { submitSuccess} = this.state;
+        const { submitSuccess, errors} = this.state;
         return (
             <div>
                 <h2>Create a New Event</h2>
@@ -110,6 +115,11 @@ export class Form extends React.Component<{}, FormState> {
                   {submitSuccess && (
                       <div className="alert alert-info" role="alert">
                           The form was successfully submitted!
+                          </div>
+                  )}
+                    {errors && (
+                      <div className="alert alert-info" role="alert">
+                          Oops, something went wrong
                           </div>
                   )}
                 <form onSubmit={this.processFormSubmission} noValidate={true}>
