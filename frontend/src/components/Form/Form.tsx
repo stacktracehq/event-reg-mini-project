@@ -87,6 +87,7 @@ export class Form extends React.Component<{}, FormState> {
         console.log("Registration Open Date: " + this.state.registrationOpenDate);
         console.log("Registration Close Date: " + this.state.registrationCloseDate);
         console.log(formData);
+        this.setState({ id: Guid.create() })
     }
 
     private handleInputChanges = (e: React.FormEvent<HTMLInputElement>) => {
