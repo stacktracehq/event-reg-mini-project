@@ -132,7 +132,7 @@ export class Form extends React.Component<{}, FormState> {
         const { submitSuccess, errors} = this.state;
         return (
             <div>
-                <h2>Create a New Event</h2>
+                <h2 className="new-event-header">Create a New Event</h2>
                {!submitSuccess && (
                       <div className="alert alert-info" role="alert">
                           Fill the form below to create a new event
@@ -144,7 +144,7 @@ export class Form extends React.Component<{}, FormState> {
                           </div>
                   )}
                     {errors && (
-                      <div className="alert alert-info" role="alert">
+                      <div className="alert alert-info alert-error" role="alert">
                           Oops, something went wrong
                           </div>
                   )}
@@ -222,9 +222,10 @@ export class Form extends React.Component<{}, FormState> {
                     </div>
 
                     <div>
-                        <button type="submit">
+                        <button type="submit" className="submit">
                             Create an Event
                         </button>
+
                     </div>
                 </form>
             </div>
