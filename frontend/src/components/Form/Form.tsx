@@ -32,6 +32,7 @@ export interface RegistrationCloseDate {
 }
 
 export interface FormState {
+    id: string
     title: EventTitle,
     description: EventDescription,
     eventLocation: EventLocation,
@@ -39,7 +40,6 @@ export interface FormState {
     eventEndDate: EventEndDate,
     registrationOpenDate: RegistrationOpenDate,
     registrationCloseDate: RegistrationCloseDate,
-    [key: string]: any;
     submitSuccess: boolean;
     errors: boolean;
 }
@@ -48,7 +48,7 @@ export class Form extends React.Component<{}, FormState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            id: Guid.create(),
+            id: Guid.raw(),
             title: {value: ""},
             description: {value: ""},
             eventLocation: {value: ""},
@@ -63,50 +63,64 @@ export class Form extends React.Component<{}, FormState> {
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = {
-            id: this.state.id.value,
-            title: {value: this.state.title},
-            description: {value: this.state.description},
-            eventLocation: {value: this.state.eventLocation},
-            eventStartDate: {value: this.state.eventStartDate},
-            eventEndDate: {value: this.state.eventEndDate},
-            registrationOpenDate: {value: this.state.registrationOpenDate},
-            registrationCloseDate: {value: this.state.registrationCloseDate},
-        }
-        await axios.post(`https://localhost:5001/v1/events`, formData)
+        await axios.post(`https://localhost:5001/v1/events`, this.state)
                 .then(response => {
-                    console.log(response);
                     this.setState({ submitSuccess: true});
                 })
                 .catch(error => {
                     console.log(error);
                     this.setState({ errors: true });
                 });
-        console.log("~*~ Form Details ~*~")
-        console.log("Id: " + this.state.id);
-        console.log("Event Name: " + this.state.title);
-        console.log("Description: " + this.state.description);
-        console.log("Location: " + this.state.eventLocation);
-        console.log("Event Start Date: " + this.state.eventStartDate);
-        console.log("Event End Date: " + this.state.eventEndDate);
-        console.log("Registration Open Date: " + this.state.registrationOpenDate);
-        console.log("Registration Close Date: " + this.state.registrationCloseDate);
-        console.log(formData);
-        this.setState({ id: Guid.create() })
+        this.setState({ id: Guid.raw() })
     }
 
-    private handleInputChanges = (e: React.FormEvent<HTMLInputElement>) => {
-        const { name, value } = e.currentTarget;
+    private updateEventName = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            [name]:value
-        } as Pick<FormState, keyof FormState>);
+            title: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateEventDescription = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            description: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateEventLocation = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            eventLocation: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateEventStartDate = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            eventStartDate: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateEventEndDate = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            eventEndDate: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateRegistrationOpenDate = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            registrationOpenDate: { value: e.currentTarget.value }
+        })
+    }
+
+    private updateRegistrationCloseDate = (e: React.FormEvent<HTMLInputElement>) => {
+        this.setState({
+            registrationCloseDate: { value: e.currentTarget.value }
+        })
     }
 
     public render() {
         const { submitSuccess, errors} = this.state;
         return (
             <div>
-                <h2>Create a New Event</h2>
+                <h2 className="new-event-header">Create a New Event</h2>
                {!submitSuccess && (
                       <div className="alert alert-info" role="alert">
                           Fill the form below to create a new event
@@ -118,7 +132,7 @@ export class Form extends React.Component<{}, FormState> {
                           </div>
                   )}
                     {errors && (
-                      <div className="alert alert-info" role="alert">
+                      <div className="alert alert-info alert-error" role="alert">
                           Oops, something went wrong
                           </div>
                   )}
@@ -128,7 +142,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="text"
                             id="title"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateEventName(e)}
                             name="title"
                             placeholder="Enter a title for your event"
                         />
@@ -138,7 +152,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="text"
                             id="description"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateEventDescription(e)}
                             name="description"
                             placeholder="Description of your event"
                         />
@@ -148,7 +162,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="text"
                             id="eventLocation"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateEventLocation(e)}
                             name="eventLocation"
                             placeholder=""
                         />
@@ -158,7 +172,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="date"
                             id="eventStartDate"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateEventStartDate(e)}
                             name="eventStartDate"
                             placeholder=""
                         />
@@ -168,7 +182,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="date"
                             id="eventEndDate"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateEventEndDate(e)}
                             name="eventEndDate"
                             placeholder=""
                         />
@@ -179,7 +193,7 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="date"
                             id="registrationOpenDate"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateRegistrationOpenDate(e)}
                             name="registrationOpenDate"
                             placeholder=""
                         />
@@ -189,16 +203,17 @@ export class Form extends React.Component<{}, FormState> {
                         <input
                             type="date"
                             id="registrationCloseDate"
-                            onChange={(e) => this.handleInputChanges(e)}
+                            onChange={(e) => this.updateRegistrationCloseDate(e)}
                             name="registrationCloseDate"
                             placeholder=""
                         />
                     </div>
 
                     <div>
-                        <button type="submit">
+                        <button type="submit" className="submit">
                             Create an Event
                         </button>
+
                     </div>
                 </form>
             </div>
