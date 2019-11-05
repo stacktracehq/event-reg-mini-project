@@ -21,6 +21,7 @@ const routing = (
                     <Link to="/new">Create New Event</Link>
                 </li>
             </ul>
+
             <Route exact path="/" component={AllEvents} />
             <Route path="/new" component={Form} />
         </div>
