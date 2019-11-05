@@ -65,24 +65,12 @@ export class Form extends React.Component<{}, FormState> {
         e.preventDefault();
         await axios.post(`https://localhost:5001/v1/events`, this.state)
                 .then(response => {
-                    console.log(response);
                     this.setState({ submitSuccess: true});
                 })
                 .catch(error => {
                     console.log(error);
                     this.setState({ errors: true });
                 });
-
-        console.log("~*~ Form Details ~*~")
-        console.log("Id: " + this.state.id);
-        console.log("Event Name: " + this.state.title.value);
-        console.log("Description: " + this.state.description.value);
-        console.log("Location: " + this.state.eventLocation.value);
-        console.log("Event Start Date: " + this.state.eventStartDate.value);
-        console.log("Event End Date: " + this.state.eventEndDate.value);
-        console.log("Registration Open Date: " + this.state.registrationOpenDate.value);
-        console.log("Registration Close Date: " + this.state.registrationCloseDate.value);
-        console.log(this.state);
         this.setState({ id: Guid.raw() })
     }
 
