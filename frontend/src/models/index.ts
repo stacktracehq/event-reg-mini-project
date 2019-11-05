@@ -39,3 +39,12 @@ export interface FormSaveRequest {
     submitSuccess: boolean;
     errors: boolean;
 }
+
+export interface EventDTO {
+    id: string,
+    title: string
+}
+
+export interface EventDTOs {
+    events: EventDTO[];
+}
