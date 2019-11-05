@@ -3,7 +3,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import axios  from "axios";
 
-import Form from './Form';
+import { Form, FormState } from './Form';
 import { Guid } from 'guid-typescript';
 
 jest.mock('axios');
@@ -38,7 +38,7 @@ it('has a heading and button', () => {
 });
 
 it('the form is submitted successfully', async () => {
-  const fakeFormData = Promise.resolve({
+  const fakeFormData: Promise<FormState> = Promise.resolve({
     id: Guid.raw(),
     title: {value: "Fake Event"},
     description: {value: "A really cool fake event"},
@@ -46,7 +46,9 @@ it('the form is submitted successfully', async () => {
     eventStartDate: {value: "2020-01-01"},
     eventEndDate: {value: "2020-02-02"},
     registrationOpenDate: {value: "2019-12-01"},
-    registrationCloseDate: {value: "2019-12-24"}
+    registrationCloseDate: {value: "2019-12-24"},
+    submitSuccess: false,
+    errors: false
   });
 
   await act(async () => {
