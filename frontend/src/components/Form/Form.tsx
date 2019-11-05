@@ -1,50 +1,14 @@
 import React from "react";
 import axios from 'axios';
 import { Guid } from "guid-typescript";
+import {
+    FormSaveRequest
+} from "../../models/index"
 
-export interface EventTitle {
-    value: string
-}
 
-export interface EventDescription {
-    value: string
-}
 
-export interface EventLocation {
-    value: string
-}
 
-// These have string for the constructor - need to fix!
-export interface EventStartDate {
-    value: Date | string
-}
-
-export interface EventEndDate {
-    value: Date | string
-}
-
-export interface RegistrationOpenDate {
-    value: Date | string
-}
-
-export interface RegistrationCloseDate {
-    value: Date | string
-}
-
-export interface FormState {
-    id: string
-    title: EventTitle,
-    description: EventDescription,
-    eventLocation: EventLocation,
-    eventStartDate: EventStartDate,
-    eventEndDate: EventEndDate,
-    registrationOpenDate: RegistrationOpenDate,
-    registrationCloseDate: RegistrationCloseDate,
-    submitSuccess: boolean;
-    errors: boolean;
-}
-
-export class Form extends React.Component<{}, FormState> {
+export class Form extends React.Component<{}, FormSaveRequest> {
     constructor(props: any) {
         super(props);
         this.state = {

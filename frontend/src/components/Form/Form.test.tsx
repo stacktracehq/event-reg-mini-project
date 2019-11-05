@@ -2,9 +2,9 @@ import React, { ButtonHTMLAttributes } from 'react';
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import axios  from "axios";
-
-import { Form, FormState } from './Form';
+import { Form } from './Form';
 import { Guid } from 'guid-typescript';
+import { FormSaveRequest } from '../../models';
 
 jest.mock('axios');
 const mockAxios = axios as jest.Mocked<typeof axios>;
@@ -38,7 +38,7 @@ it('has a heading and button', () => {
 });
 
 it('the form is submitted successfully', async () => {
-  const fakeFormData: Promise<FormState> = Promise.resolve({
+  const fakeFormData: Promise<FormSaveRequest> = Promise.resolve({
     id: Guid.raw(),
     title: {value: "Fake Event"},
     description: {value: "A really cool fake event"},
