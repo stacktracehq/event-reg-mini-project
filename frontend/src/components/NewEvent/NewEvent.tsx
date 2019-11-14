@@ -1,25 +1,15 @@
 import React from "react";
 import axios from 'axios';
-import { Guid } from "guid-typescript";
 import {
-    FormSaveRequest
+    EventSaveRequest
 } from "../../models/models"
+import { RouteComponentProps } from "react-router-dom";
 
-
-
-
-export class Form extends React.Component<{}, FormSaveRequest> {
-    constructor(props: any) {
+export class NewEvent extends React.Component<{} & RouteComponentProps, EventSaveRequest> {
+    constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
-            id: Guid.raw(),
-            title: {value: ""},
-            description: {value: ""},
-            eventLocation: {value: ""},
-            eventStartDate: {value: ""},
-            eventEndDate: {value: ""},
-            registrationOpenDate: {value: ""},
-            registrationCloseDate: {value: ""},
+            event: null,
             submitSuccess: false,
             errors: false,
         }
@@ -30,53 +20,82 @@ export class Form extends React.Component<{}, FormSaveRequest> {
         await axios.post(`https://localhost:5001/v1/events`, this.state)
                 .then(response => {
                     this.setState({ submitSuccess: true});
+                    const { history } = this.props;
+                    history.push('/');
                 })
                 .catch(error => {
                     console.log(error);
                     this.setState({ errors: true });
                 });
-        this.setState({ id: Guid.raw() })
     }
 
     private updateEventName = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            title: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                title: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateEventDescription = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            description: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                description: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateEventLocation = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            eventLocation: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventLocation: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateEventStartDate = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            eventStartDate: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventStartDate: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateEventEndDate = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            eventEndDate: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventEndDate: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateRegistrationOpenDate = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            registrationOpenDate: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                registrationOpenDate: { value: e.currentTarget.value }
+            }
         })
     }
 
     private updateRegistrationCloseDate = (e: React.FormEvent<HTMLInputElement>) => {
         this.setState({
-            registrationCloseDate: { value: e.currentTarget.value }
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                registrationCloseDate: { value: e.currentTarget.value }
+            }
         })
     }
 
@@ -185,4 +204,4 @@ export class Form extends React.Component<{}, FormSaveRequest> {
     }
 }
 
-export default Form;
+export default NewEvent;
