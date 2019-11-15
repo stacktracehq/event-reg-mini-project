@@ -17,7 +17,7 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await axios.post(`https://localhost:5001/v1/events`, this.state)
+        await axios.post<Event>(`https://localhost:5001/v1/events`, this.state.event)
                 .then(response => {
                     this.setState({ submitSuccess: true});
                     const { history } = this.props;

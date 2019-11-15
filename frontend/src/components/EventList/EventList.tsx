@@ -3,13 +3,13 @@ import { EventDTO } from "../../models/models";
 import axios from "axios";
 import {  Link, RouteComponentProps } from "react-router-dom"
 
-export class EventList extends React.Component<{} & RouteComponentProps,EventDTO[]> {
+export class EventList extends React.Component<{} & RouteComponentProps,{ items: EventDTO[] }> {
     private mounted: boolean;
 
     constructor(props: RouteComponentProps) {
         super(props);
         this.mounted = false;
-        this.state = []
+        this.state = { items: [] }
     }
 
      componentDidMount() {
@@ -20,7 +20,7 @@ export class EventList extends React.Component<{} & RouteComponentProps,EventDTO
         })
             .then(response => {
                 if (this.mounted) {
-                    this.setState(response.data);
+                    this.setState({ items: response.data });
                 }
             })
             .catch(error => {
@@ -45,16 +45,16 @@ export class EventList extends React.Component<{} & RouteComponentProps,EventDTO
     }
 
     removeEvent(eventId: string) {
-        let eventsCopy = [...this.state]
+        let eventsCopy = [...this.state.items]
         let index = eventsCopy.findIndex(e => e.id === eventId);
         if (index !== -1) {
             eventsCopy.splice(index, 1);
-            this.setState(eventsCopy);
+            this.setState({ items: eventsCopy });
         }
     }
 
     mapEvents = (): JSX.Element[] => {
-        return this.state.map((anEvent) => {
+        return this.state.items.map((anEvent) => {
             return (
                 <tbody key={anEvent.id}>
                     <tr>
@@ -80,7 +80,7 @@ export class EventList extends React.Component<{} & RouteComponentProps,EventDTO
     }
 
     renderEvents() {
-        if (this.state.length === 0) {
+        if (this.state.items.length === 0) {
             return (
                 <p>
                     There are no events!
@@ -89,7 +89,7 @@ export class EventList extends React.Component<{} & RouteComponentProps,EventDTO
         } else {
             return(
                 <div>
-                    <p>There are {this.state.length} events!</p>
+                    <p>There are {this.state.items.length} events!</p>
                     <table>
                         <thead>
                             <tr>

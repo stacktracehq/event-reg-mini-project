@@ -27,7 +27,7 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await axios.put(`https://localhost:5001/v1/events/${this.props.match.params.id}`, this.state)
+        await axios.put(`https://localhost:5001/v1/events/${this.props.match.params.id}`, this.state.event)
                 .then(() => {
                     this.setState({ submitSuccess: true});
                     const { history } = this.props;
@@ -104,106 +104,117 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
 
     public render() {
         const { submitSuccess, errors} = this.state;
-        return (
-            <div>
-                <h2 className="new-event-header">Edit Event:  {this.state.event!.title.value}</h2>
-               {!submitSuccess && (
-                      <div className="alert alert-info" role="alert">
-                          Fill the form below to create a new event
-                  </div>
-                  )}
-                  {submitSuccess && (
-                      <div className="alert alert-info" role="alert">
-                          The form was successfully submitted!
-                          </div>
-                  )}
-                    {errors && (
-                      <div className="alert alert-info alert-error" role="alert">
-                          Oops, something went wrong
-                          </div>
-                  )}
-                <form onSubmit={this.processFormSubmission} noValidate={true}>
+        if (this.state.event !== null) {
+            return (
+
                     <div>
-                        <label htmlFor="title">Event Name: </label>
-                        <input
-                            type="text"
-                            id="title"
-                            onChange={(e) => this.updateEventName(e)}
-                            name="title"
-                            placeholder={ this.state.event!.title.value }
-                        />
+                    <h2 className="new-event-header">Edit Event:  {this.state.event!.title.value}</h2>
+                {!submitSuccess && (
+                        <div className="alert alert-info" role="alert">
+                            Fill the form below to edit your event
                     </div>
+                    )}
+                    {submitSuccess && (
+                        <div className="alert alert-info" role="alert">
+                            The form was successfully submitted!
+                            </div>
+                    )}
+                        {errors && (
+                        <div className="alert alert-info alert-error" role="alert">
+                            Oops, something went wrong
+                            </div>
+                    )}
+                    <form onSubmit={this.processFormSubmission} noValidate={true}>
+                        <div>
+                            <label htmlFor="title">Event Name: </label>
+                            <input
+                                type="text"
+                                id="title"
+                                onChange={(e) => this.updateEventName(e)}
+                                name="title"
+                                placeholder={ this.state.event!.title.value }
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="description">Event Description: </label>
+                            <input
+                                type="text"
+                                id="description"
+                                onChange={(e) => this.updateEventDescription(e)}
+                                name="description"
+                                placeholder={ this.state.event!.description.value }
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="eventLocation">Event Location:</label>
+                            <input
+                                type="text"
+                                id="eventLocation"
+                                onChange={(e) => this.updateEventLocation(e)}
+                                name="eventLocation"
+                                placeholder={this.state.event!.eventLocation.value}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="eventStartDate">Event Start Date: </label>
+                            <input
+                                type="date"
+                                id="eventStartDate"
+                                onChange={(e) => this.updateEventStartDate(e)}
+                                name="eventStartDate"
+                                value={this.state.event!.eventStartDate.value.toString().substr(0,10)}
+                            />
+                        </div>
                     <div>
-                        <label htmlFor="description">Event Description: </label>
-                        <input
-                            type="text"
-                            id="description"
-                            onChange={(e) => this.updateEventDescription(e)}
-                            name="description"
-                            placeholder={ this.state.event!.description.value }
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="eventLocation">Event Location:</label>
-                        <input
-                            type="text"
-                            id="eventLocation"
-                            onChange={(e) => this.updateEventLocation(e)}
-                            name="eventLocation"
-                            placeholder={this.state.event!.eventLocation.value}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="eventStartDate">Event Start Date: </label>
-                        <input
-                            type="date"
-                            id="eventStartDate"
-                            onChange={(e) => this.updateEventStartDate(e)}
-                            name="eventStartDate"
-                            value={this.state.event!.eventStartDate.value.toString().substr(0,10)}
-                        />
-                    </div>
+                        <label htmlFor="eventEndDate">Event End Date: </label>
+                            <input
+                                type="date"
+                                id="eventEndDate"
+                                onChange={(e) => this.updateEventEndDate(e)}
+                                name="eventEndDate"
+                                value={this.state.event!.eventEndDate.value.toString().substr(0,10)}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="registrationOpenDate">Registration Open Date: </label>
+                            <input
+                                type="date"
+                                id="registrationOpenDate"
+                                onChange={(e) => this.updateRegistrationOpenDate(e)}
+                                name="registrationOpenDate"
+                                value={this.state.event!.registrationOpenDate.value.toString().substr(0,10)}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="registrationCloseDate">Registration Close Date: </label>
+                            <input
+                                type="date"
+                                id="registrationCloseDate"
+                                onChange={(e) => this.updateRegistrationCloseDate(e)}
+                                name="registrationCloseDate"
+                                value={this.state.event!.registrationCloseDate.value.toString().substr(0,10)}
+                            />
+                        </div>
+
+                        <div>
+                            <button type="submit" className="submit">
+                                Update Event
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+
+
+            )
+        } else {
+            return (
                 <div>
-                    <label htmlFor="eventEndDate">Event End Date: </label>
-                        <input
-                            type="date"
-                            id="eventEndDate"
-                            onChange={(e) => this.updateEventEndDate(e)}
-                            name="eventEndDate"
-                            value={this.state.event!.eventEndDate.value.toString().substr(0,10)}
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="registrationOpenDate">Registration Open Date: </label>
-                        <input
-                            type="date"
-                            id="registrationOpenDate"
-                            onChange={(e) => this.updateRegistrationOpenDate(e)}
-                            name="registrationOpenDate"
-                            value={this.state.event!.registrationOpenDate.value.toString().substr(0,10)}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="registrationCloseDate">Registration Close Date: </label>
-                        <input
-                            type="date"
-                            id="registrationCloseDate"
-                            onChange={(e) => this.updateRegistrationCloseDate(e)}
-                            name="registrationCloseDate"
-                            value={this.state.event!.registrationCloseDate.value.toString().substr(0,10)}
-                        />
-                    </div>
-
-                    <div>
-                        <button type="submit" className="submit">
-                            Update Event
-                        </button>
-
-                    </div>
-                </form>
-            </div>
-        )
+                    Loading...
+                </div>
+            )
+        }
     }
 
 }
