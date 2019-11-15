@@ -1,13 +1,11 @@
 import React from "react";
-import { EventDTOs, EventDTO } from "../../models/index";
+import { EventDTO } from "../../models/models";
 import axios from "axios";
 
-export class AllEvents extends React.Component<{}, EventDTOs> {
+export class AllEvents extends React.Component<{}, EventDTO[]> {
     constructor(props: any) {
         super(props);
-        this.state = {
-            events: []
-        }
+        this.state = []
     }
 
      componentDidMount() {
@@ -17,8 +15,7 @@ export class AllEvents extends React.Component<{}, EventDTOs> {
 
         })
             .then(response => {
-                const { data } = response;
-                this.setState({ events: data });
+                this.setState(response.data);
             })
             .catch(error => {
                 console.log(error);
@@ -26,7 +23,7 @@ export class AllEvents extends React.Component<{}, EventDTOs> {
     }
 
     mapEvents = (): JSX.Element[] => {
-        return this.state.events.map((anEvent) => {
+        return this.state.map((anEvent) => {
             return (
                 <ul key={anEvent.id}>
                     <li>{anEvent.id}</li>
@@ -38,7 +35,7 @@ export class AllEvents extends React.Component<{}, EventDTOs> {
     }
 
     renderEvents() {
-        if (this.state.events.length === 0) {
+        if (this.state.length === 0) {
             return (
                 <p>
                     There are no events!
@@ -47,7 +44,7 @@ export class AllEvents extends React.Component<{}, EventDTOs> {
         } else {
             return(
                 <p>
-                    There are {this.state.events.length} events!
+                    There are {this.state.length} events!
                     {this.mapEvents()}
                 </p>
             );

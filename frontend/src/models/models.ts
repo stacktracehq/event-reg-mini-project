@@ -1,3 +1,5 @@
+import { RouteComponentProps } from "react-router-dom";
+
 export interface EventTitle {
     value: string
 }
@@ -27,15 +29,8 @@ export interface RegistrationCloseDate {
     value: Date | string
 }
 
-export interface FormSaveRequest {
-    id: string
-    title: EventTitle,
-    description: EventDescription,
-    eventLocation: EventLocation,
-    eventStartDate: EventStartDate,
-    eventEndDate: EventEndDate,
-    registrationOpenDate: RegistrationOpenDate,
-    registrationCloseDate: RegistrationCloseDate,
+export interface EventSaveRequest {
+    event: Event | null,
     submitSuccess: boolean;
     errors: boolean;
 }
@@ -45,6 +40,17 @@ export interface EventDTO {
     title: string
 }
 
-export interface EventDTOs {
-    events: EventDTO[];
+export interface Event extends RouteComponentProps<{ id?: string}> {
+    id: string
+    title: EventTitle,
+    description: EventDescription,
+    eventLocation: EventLocation,
+    eventStartDate: EventStartDate,
+    eventEndDate: EventEndDate,
+    registrationOpenDate: RegistrationOpenDate,
+    registrationCloseDate: RegistrationCloseDate,
+}
+
+export interface EventId {
+    id: string
 }
