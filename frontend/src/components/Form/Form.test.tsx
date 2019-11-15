@@ -4,7 +4,7 @@ import { act } from "react-dom/test-utils";
 import axios  from "axios";
 import { Form } from './Form';
 import { Guid } from 'guid-typescript';
-import { FormSaveRequest } from '../../models';
+import { FormSaveRequest } from '../../models/models';
 
 jest.mock('axios');
 const mockAxios = axios as jest.Mocked<typeof axios>;

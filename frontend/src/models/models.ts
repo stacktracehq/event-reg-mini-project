@@ -1,3 +1,5 @@
+import { RouteComponentProps } from "react-router-dom";
+
 export interface EventTitle {
     value: string
 }
@@ -45,6 +47,17 @@ export interface EventDTO {
     title: string
 }
 
-export interface EventDTOs {
-    events: EventDTO[];
+export interface Event extends RouteComponentProps<{ id?: string}> {
+    id: string
+    title: EventTitle,
+    description: EventDescription,
+    eventLocation: EventLocation,
+    eventStartDate: EventStartDate,
+    eventEndDate: EventEndDate,
+    registrationOpenDate: RegistrationOpenDate,
+    registrationCloseDate: RegistrationCloseDate,
+}
+
+export interface EventId {
+    id: string
 }
