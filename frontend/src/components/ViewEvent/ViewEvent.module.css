@@ -1,0 +1,27 @@
+.main {
+    composes: main from "../../styles/styles.css";
+}
+
+.button {
+    composes: button from "../../styles/styles.css";
+}
+
+.delete {
+    composes: delete from "../../styles/styles.css";
+}
+
+.fieldName {
+    composes: label from "../../styles/styles.css";
+}
+
+.spacing {
+    margin: 30px 0px 0px;
+}
+
+.loading {
+    composes: loading from "../../styles/styles.css";
+}
+
+.loadingContainer {
+    composes: loadingContainer from "../../styles/styles.css"
+}

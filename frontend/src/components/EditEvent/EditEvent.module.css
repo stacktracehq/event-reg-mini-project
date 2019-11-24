@@ -1,0 +1,36 @@
+.button {
+    composes: button from "../../styles/styles.css";
+}
+
+.label {
+    composes: label from "../../styles/styles.css"
+}
+
+.input {
+   composes: input from "../../styles/styles.css"
+}
+
+.main {
+    composes: main from "../../styles/styles.css";
+}
+
+.labelInputDiv {
+    composes: labelInputDiv from "../../styles/styles.css"
+}
+
+textarea {
+    vertical-align: top;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI' ;
+}
+
+.textareaLabel {
+    composes: textareaLabel from "../../styles/styles.css"
+}
+
+.loading {
+    composes: loading from "../../styles/styles.css"
+}
+
+.loadingContainer {
+    composes: loadingContainer from "../../styles/styles.css"
+}
