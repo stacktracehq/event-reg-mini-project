@@ -1,7 +1,15 @@
 import React from "react";
 import { EventDTO } from "../../models/models";
+import styles from './EventList.module.css'
 import axios from "axios";
 import {  Link, RouteComponentProps } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faTrashAlt,
+    faEdit
+ } from "@fortawesome/free-regular-svg-icons";
+ import { faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 
 export class EventList extends React.Component<{} & RouteComponentProps,{ items: EventDTO[] }> {
     private mounted: boolean;
@@ -56,25 +64,25 @@ export class EventList extends React.Component<{} & RouteComponentProps,{ items:
     mapEvents = (): JSX.Element[] => {
         return this.state.items.map((anEvent) => {
             return (
-                <tbody key={anEvent.id}>
-                    <tr>
-                        <td>{anEvent.id}</td>
-                        <td><Link to={`/event/${anEvent.id}`}>{anEvent.title}</Link></td>
-                        <td>
-                            <Link to={`/event/${anEvent.id}`}>View</Link>
-                            <Link to={`/event/${anEvent.id}/edit`}>Edit</Link>
-                            <button
-                                type="button"
-                                className="delete"
-                                onClick={() =>
-                                    this.handleDelete(anEvent.id)
-                                }
-                            >
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
+                <tr key={anEvent.id}>
+                    <td><Link to={`/event/${anEvent.id}`}>{anEvent.title}</Link></td>
+                    <td>
+                        <Link to={`/event/${anEvent.id}/edit`} className={styles.button}>
+                            <FontAwesomeIcon icon={faEdit} fixedWidth size="sm" />{" "}
+                            Edit
+                        </Link>
+                        <button
+                            type="button"
+                            className={[ styles.button, styles.delete ].join(' ')}
+                            onClick={() =>
+                                this.handleDelete(anEvent.id)
+                            }
+                        >
+                            <FontAwesomeIcon icon={faTrashAlt} fixedWidth size="sm" />{" "}
+                            Delete
+                        </button>
+                    </td>
+                </tr>
             )
         });
     }
@@ -82,24 +90,30 @@ export class EventList extends React.Component<{} & RouteComponentProps,{ items:
     renderEvents() {
         if (this.state.items.length === 0) {
             return (
-                <p>
-                    There are no events!
+                <div className={styles.loadingContainer}>
+                <p className={styles.loading}>
+                    <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+                    Loading...
                 </p>
+                </div>
             );
         } else {
             return(
                 <div>
-                    <p>There are {this.state.items.length} events!</p>
+                    {/* <p>There are {this.state.items.length} events!</p> */}
+                    <p className={styles.newEventP}>
+                        <Link to="/new" className={styles.newEvent}>
+                            <FontAwesomeIcon icon={faPlusSquare} fixedWidth size="sm" />{" "}
+                                Create New Event
+                        </Link>
+                    </p>
+
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Event Id</th>
-                                <th>Event Title</th>
-                                <th></th>
-                            </tr>
-                        </thead>
+                        <tbody>
                             {this.mapEvents()}
+                        </tbody>
                     </table>
+
                 </div>
             );
         }
@@ -107,7 +121,7 @@ export class EventList extends React.Component<{} & RouteComponentProps,{ items:
 
     public render() {
         return (
-            <div>
+            <div className={styles.main}>
                 <h1>Carlie's Stupendous and Amazing Event Registration Project</h1>
 
                 {this.renderEvents()}

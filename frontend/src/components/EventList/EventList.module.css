@@ -1,0 +1,62 @@
+.main {
+    composes: main from "../../styles/styles.css";
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(43, 43, 43);
+}
+
+.button {
+    composes: button from "../../styles/styles.css";
+}
+
+.delete {
+    composes: delete from "../../styles/styles.css";
+}
+
+table {
+    width: 100%;
+    border-radius: 20px;
+    border-spacing: 0px;
+}
+
+tr:nth-child(even){
+    background-color: rgb(238, 238, 238);
+}
+
+td {
+    text-align: center;
+}
+
+.loading {
+    composes: loading from "../../styles/styles.css";
+}
+
+.loadingContainer {
+    composes: loadingContainer from "../../styles/styles.css";
+}
+
+.newEvent {
+    composes: newEvent from "../../styles/styles.css";
+    display: inline-block;
+}
+
+.newEventP {
+    text-align: center;
+}
+
+
+@media only screen and ( max-width: 600px ) {
+    .main {
+        composes: main from '../../styles/styles.css'
+    }
+
+    h1 {
+        padding: 0 30px;
+    }
+}
