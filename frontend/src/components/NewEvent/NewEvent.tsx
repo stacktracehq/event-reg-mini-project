@@ -4,22 +4,29 @@ import {
     EventSaveRequest
 } from "../../models/models"
 import { RouteComponentProps } from "react-router-dom";
+import styles from "./NewEvent.module.css";
+import { Guid } from "guid-typescript";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlusSquare} from "@fortawesome/free-regular-svg-icons"
 
 export class NewEvent extends React.Component<{} & RouteComponentProps, EventSaveRequest> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             event: null,
-            submitSuccess: false,
             errors: false,
         }
     }
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await axios.post<Event>(`https://localhost:5001/v1/events`, this.state.event)
+        let request = {
+            ...this.state.event!,
+            id: Guid.raw()
+        }
+        console.log(this.state)
+        await axios.post<Event>(`https://localhost:5001/v1/events`, request)
                 .then(response => {
-                    this.setState({ submitSuccess: true});
                     const { history } = this.props;
                     history.push('/');
                 })
@@ -39,7 +46,7 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
         })
     }
 
-    private updateEventDescription = (e: React.FormEvent<HTMLInputElement>) => {
+    private updateEventDescription = (e: React.FormEvent<HTMLTextAreaElement>) => {
         this.setState({
             ...this.state,
             event: {
@@ -100,100 +107,96 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
     }
 
     public render() {
-        const { submitSuccess, errors} = this.state;
+        const {errors} = this.state;
         return (
-            <div>
-                <h2 className="new-event-header">Create a New Event</h2>
-               {!submitSuccess && (
-                      <div className="alert alert-info" role="alert">
-                          Fill the form below to create a new event
-                  </div>
-                  )}
-                  {submitSuccess && (
-                      <div className="alert alert-info" role="alert">
-                          The form was successfully submitted!
-                          </div>
-                  )}
+            <div className={styles.main}>
+                <h1 className="new-event-header">Create a New Event</h1>
                     {errors && (
-                      <div className="alert alert-info alert-error" role="alert">
+                      <div className={styles.ohno} role="alert">
                           Oops, something went wrong
                           </div>
                   )}
                 <form onSubmit={this.processFormSubmission} noValidate={true}>
-                    <div>
-                        <label htmlFor="title">Event Name: </label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="title" className={styles.label}>Event Name: </label>
                         <input
                             type="text"
                             id="title"
                             onChange={(e) => this.updateEventName(e)}
                             name="title"
-                            placeholder="Enter a title for your event"
+                            className={styles.input}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="description">Event Description: </label>
-                        <input
-                            type="text"
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="description" className={[ styles.label , styles.textareaLabel ].join(" ")}>Description: </label>
+                        <textarea
                             id="description"
                             onChange={(e) => this.updateEventDescription(e)}
                             name="description"
-                            placeholder="Description of your event"
+                            className={styles.input}
+                            rows={ 5 }
                         />
                     </div>
-                    <div>
-                        <label htmlFor="eventLocation">Event Location:</label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventLocation" className={styles.label}>Location:</label>
                         <input
                             type="text"
                             id="eventLocation"
                             onChange={(e) => this.updateEventLocation(e)}
                             name="eventLocation"
                             placeholder=""
+                            className={styles.input}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="eventStartDate">Event Start Date: </label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventStartDate" className={styles.label}>Start Date: </label>
                         <input
                             type="date"
                             id="eventStartDate"
                             onChange={(e) => this.updateEventStartDate(e)}
                             name="eventStartDate"
                             placeholder=""
+                            className={styles.input}
                         />
                     </div>
-                <div>
-                    <label htmlFor="eventEndDate">Event End Date: </label>
+                <div className={styles.labelInputDiv}>
+                    <label htmlFor="eventEndDate" className={styles.label}>End Date: </label>
                         <input
                             type="date"
                             id="eventEndDate"
                             onChange={(e) => this.updateEventEndDate(e)}
                             name="eventEndDate"
                             placeholder=""
+                            className={styles.input}
                         />
                     </div>
 
-                    <div>
-                        <label htmlFor="registrationOpenDate">Registration Open Date: </label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="registrationOpenDate" className={styles.label}>Registration Open Date: </label>
                         <input
                             type="date"
                             id="registrationOpenDate"
                             onChange={(e) => this.updateRegistrationOpenDate(e)}
                             name="registrationOpenDate"
                             placeholder=""
+                            className={styles.input}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="registrationCloseDate">Registration Close Date: </label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="registrationCloseDate" className={styles.label}>Registration Close Date: </label>
                         <input
                             type="date"
                             id="registrationCloseDate"
                             onChange={(e) => this.updateRegistrationCloseDate(e)}
                             name="registrationCloseDate"
                             placeholder=""
+                            className={styles.input}
                         />
                     </div>
 
                     <div>
-                        <button type="submit" className="submit">
+                        <button type="submit" className={styles.button}>
+                            <FontAwesomeIcon icon={faPlusSquare} fixedWidth size="sm"/>{" "}
                             Create an Event
                         </button>
 

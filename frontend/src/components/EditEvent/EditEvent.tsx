@@ -2,13 +2,16 @@ import React from "react";
 import axios from "axios";
 import { RouteComponentProps } from "react-router";
 import { EventSaveRequest, EventId, Event } from "../../models/models";
+import styles from "./EditEvent.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export class EditEvent extends React.Component<RouteComponentProps<EventId>, EventSaveRequest> {
         constructor(props: RouteComponentProps<EventId>) {
         super(props);
         this.state = {
             event: null,
-            submitSuccess: false,
             errors: false,
         }
     }
@@ -29,7 +32,6 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
         e.preventDefault();
         await axios.put(`https://localhost:5001/v1/events/${this.props.match.params.id}`, this.state.event)
                 .then(() => {
-                    this.setState({ submitSuccess: true});
                     const { history } = this.props;
                     history.push(`/event/${this.props.match.params.id}`);
                 })
@@ -48,7 +50,7 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
         })
     }
 
-    private updateEventDescription = (e: React.FormEvent<HTMLInputElement>) => {
+    private updateEventDescription = (e: React.FormEvent<HTMLTextAreaElement>) => {
         this.setState({
             event: {
                 ...this.state.event!,
@@ -103,102 +105,103 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
     }
 
     public render() {
-        const { submitSuccess, errors} = this.state;
+        const { errors} = this.state;
         if (this.state.event !== null) {
             return (
 
-                    <div>
-                    <h2 className="new-event-header">Edit Event:  {this.state.event!.title.value}</h2>
-                {!submitSuccess && (
-                        <div className="alert alert-info" role="alert">
-                            Fill the form below to edit your event
-                    </div>
-                    )}
-                    {submitSuccess && (
-                        <div className="alert alert-info" role="alert">
-                            The form was successfully submitted!
-                            </div>
-                    )}
-                        {errors && (
+                <div className={styles.main}>
+                    <h1 className="new-event-header">
+                        Edit Event:  {this.state.event!.title.value}
+                    </h1>
+                    {errors && (
                         <div className="alert alert-info alert-error" role="alert">
                             Oops, something went wrong
                             </div>
                     )}
-                    <form onSubmit={this.processFormSubmission} noValidate={true}>
-                        <div>
-                            <label htmlFor="title">Event Name: </label>
+                    <form onSubmit={this.processFormSubmission} noValidate={true} >
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="title" className={styles.label}>Event Name: </label>
                             <input
                                 type="text"
                                 id="title"
                                 onChange={(e) => this.updateEventName(e)}
                                 name="title"
-                                placeholder={ this.state.event!.title.value }
+                                value={ this.state.event!.title.value }
+                                className={styles.input}
                             />
                         </div>
-                        <div>
-                            <label htmlFor="description">Event Description: </label>
-                            <input
-                                type="text"
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="description" className={[ styles.label, styles.textareaLabel ].join(" ")}>Description: </label>
+                            <textarea
                                 id="description"
                                 onChange={(e) => this.updateEventDescription(e)}
                                 name="description"
-                                placeholder={ this.state.event!.description.value }
+                                value={ this.state.event!.description.value }
+                                className={styles.input}
+                                rows={5}
                             />
                         </div>
-                        <div>
-                            <label htmlFor="eventLocation">Event Location:</label>
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="eventLocation" className={styles.label}>Location:</label>
                             <input
                                 type="text"
                                 id="eventLocation"
                                 onChange={(e) => this.updateEventLocation(e)}
                                 name="eventLocation"
-                                placeholder={this.state.event!.eventLocation.value}
+                                value={this.state.event!.eventLocation.value}
+                                className={styles.input}
                             />
                         </div>
-                        <div>
-                            <label htmlFor="eventStartDate">Event Start Date: </label>
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="eventStartDate" className={styles.label}>Start Date: </label>
                             <input
                                 type="date"
                                 id="eventStartDate"
                                 onChange={(e) => this.updateEventStartDate(e)}
                                 name="eventStartDate"
                                 value={this.state.event!.eventStartDate.value.toString().substr(0,10)}
+                                className={styles.input}
                             />
                         </div>
-                    <div>
-                        <label htmlFor="eventEndDate">Event End Date: </label>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventEndDate" className={styles.label}>End Date: </label>
                             <input
                                 type="date"
                                 id="eventEndDate"
                                 onChange={(e) => this.updateEventEndDate(e)}
                                 name="eventEndDate"
                                 value={this.state.event!.eventEndDate.value.toString().substr(0,10)}
+                                className={styles.input}
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="registrationOpenDate">Registration Open Date: </label>
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="registrationOpenDate" className={styles.label}>Registration Open Date: </label>
                             <input
                                 type="date"
                                 id="registrationOpenDate"
                                 onChange={(e) => this.updateRegistrationOpenDate(e)}
                                 name="registrationOpenDate"
                                 value={this.state.event!.registrationOpenDate.value.toString().substr(0,10)}
+                                className={styles.input}
                             />
                         </div>
-                        <div>
-                            <label htmlFor="registrationCloseDate">Registration Close Date: </label>
+                        <div className={styles.labelInputDiv}>
+                            <label htmlFor="registrationCloseDate" className={styles.label}>Registration Close Date: </label>
                             <input
                                 type="date"
                                 id="registrationCloseDate"
                                 onChange={(e) => this.updateRegistrationCloseDate(e)}
                                 name="registrationCloseDate"
                                 value={this.state.event!.registrationCloseDate.value.toString().substr(0,10)}
+                                className={styles.input}
                             />
                         </div>
 
                         <div>
-                            <button type="submit" className="submit">
+                            <button type="submit" className={styles.button}>
+                                <FontAwesomeIcon icon={faEdit} fixedWidth size="sm"  />
+                                {" "}
                                 Update Event
                             </button>
 
@@ -210,8 +213,13 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
             )
         } else {
             return (
-                <div>
-                    Loading...
+                <div className={styles.main}>
+                    <div className={styles.loadingContainer}>
+                        <p className={styles.loading}>
+                            <FontAwesomeIcon icon={faSpinner} spin fixedWidth />
+                            Loading...
+                        </p>
+                    </div>
                 </div>
             )
         }

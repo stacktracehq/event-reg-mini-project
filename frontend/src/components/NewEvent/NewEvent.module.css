@@ -1,0 +1,31 @@
+.main {
+    composes: main from "../../styles/styles.css"
+}
+
+.input {
+     composes: input from "../../styles/styles.css"
+}
+
+.button {
+    composes: button from "../../styles/styles.css"
+}
+
+.label {
+    composes: label from "../../styles/styles.css"
+}
+
+.labelInputDiv {
+    composes: labelInputDiv from "../../styles/styles.css"
+}
+
+.ohno {
+    color: #dc3545;
+}
+
+textarea {
+    vertical-align: top;
+}
+
+.textareaLabel {
+    composes: textareaLabel from "../../styles/styles.css"
+}
