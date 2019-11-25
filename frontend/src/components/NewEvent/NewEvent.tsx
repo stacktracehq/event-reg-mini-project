@@ -24,13 +24,6 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
             ...this.state.event!,
             id: Guid.raw()
         }
-        // this.setState((state, props) => ({
-        //     event: {
-        //         ...state.event!,
-        //         id: Guid.raw()
-
-        //     }
-        // }));
         console.log(this.state)
         await axios.post<Event>(`https://localhost:5001/v1/events`, request)
                 .then(response => {
