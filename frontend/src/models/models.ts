@@ -31,7 +31,6 @@ export interface RegistrationCloseDate {
 
 export interface EventSaveRequest {
     event: Event | null,
-    submitSuccess: boolean;
     errors: boolean;
 }
 
@@ -40,8 +39,8 @@ export interface EventDTO {
     title: string
 }
 
-export interface Event extends RouteComponentProps<{ id?: string}> {
-    id: string
+export interface Event {
+    id: string,
     title: EventTitle,
     description: EventDescription,
     eventLocation: EventLocation,

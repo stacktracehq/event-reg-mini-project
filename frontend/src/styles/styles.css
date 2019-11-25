@@ -1,0 +1,117 @@
+.button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 10px 10px 0px;
+    border-radius: 4px;
+}
+
+.button:hover {
+    background-color: #0069d9;
+    border-color: #0069d9;
+    color: white;
+}
+
+.button:focus {
+    box-shadow: 0 0 0 0.2rem rgb(38, 143, 255)
+}
+
+.delete {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.delete:hover {
+    background-color: #c82333;
+    cursor: pointer;
+}
+
+.delete:focus {
+    box-shadow: 0 0 0 0.2rem rgb(225, 83,97);
+    border-color: #dc3545;
+    outline: 0;
+}
+
+.main {
+    max-width: 500px;
+    margin: 65px auto;
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 7px 7px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.input {
+    background-color: white;
+    border: #dbdbdb solid 1px;
+    border-radius: 4px;
+    color: #363636;
+    padding-bottom: calc(.5em - 1px);
+    padding-left: calc(.75em - 1px);
+    padding-right: calc(.75em - 1px);
+    padding-top: calc(.5em - 1px);
+    width: 300px;
+    margin: 5px 0px 0px;
+}
+
+.label {
+    display: inline-block;
+    width: 180px;
+    color: rgb(87, 87, 87);
+}
+
+.labelInputDiv {
+    margin: 10px 0px;
+}
+
+.textareaLabel {
+    padding: 10px 0;
+}
+
+.loading {
+    margin: 0px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.loadingContainer {
+    position: relative;
+    height:  400px;
+}
+
+.newEvent {
+  composes: button;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.newEvent:hover {
+  background-color: #218838;
+}
+
+.newEvent:focus {
+  box-shadow: 0 0 0 0.2rem rgb(72, 180, 97);
+  outline: 0;
+}
+
+@media only screen and ( max-width: 600px ) {
+    .main {
+        margin: 50px 0;
+        padding: 30px 0;
+        border-radius: 0;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    h1 {
+        padding: 0 30px;
+    }
+}
