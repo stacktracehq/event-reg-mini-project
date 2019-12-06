@@ -44,6 +44,7 @@ namespace Whiteboard.Registration.Web.Controllers
         [HttpPost]
         public Task Post(EventManagementModel value)
         {
+            Validation.validate(value);
             return _repo.Add(value);
         }
 
@@ -53,6 +54,7 @@ namespace Whiteboard.Registration.Web.Controllers
         {
             if (value.Id != id)
                 return BadRequest();
+            Validation.validate(value);
             await _repo.Update(value);
             return Ok();
         }
