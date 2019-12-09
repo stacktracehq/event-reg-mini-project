@@ -33,16 +33,30 @@ namespace Whiteboard.Registration.Domain.Tests
         public void TestStartDate_StartDateIsAfterEndDate()
         {
             var eventModel = EventManagementModelBuilder.Build();
-            var twoDaysFromNow = new EventStartDate(DateTime.Now.AddDays(+2));
-            var oneDayFromNow = new EventEndDate(DateTime.Now.AddDays(+1));
+            var twoDaysFromNow = new EventStartDate(DateTime.Today.AddDays(+2));
+            var tomorrow = new EventEndDate(DateTime.Now.AddDays(+1));
             var invalidStartDateModel = eventModel.With(
                 eventStartDate: twoDaysFromNow,
-                eventEndDate: oneDayFromNow
+                eventEndDate: tomorrow
             );
 
             Assert.Throws<ArgumentException>(() =>
                 Validation.validate(invalidStartDateModel)
             );
+        }
+
+        [Fact]
+        public void TestStartDate_StartDateIsBeforeEndDate()
+        {
+            var eventModel = EventManagementModelBuilder.Build();
+            var tomorrow = new EventStartDate(DateTime.Today.AddDays(1));
+            var twoDaysFromNow = new EventEndDate(DateTime.Today.AddDays(2));
+            var validStartDateModel = eventModel.With(
+                eventStartDate: tomorrow,
+                eventEndDate: twoDaysFromNow
+            );
+
+            Validation.validate(validStartDateModel);
         }
 
         [Fact]
@@ -60,6 +74,18 @@ namespace Whiteboard.Registration.Domain.Tests
         }
 
         [Fact]
+        public void TestStartDate_StartDateEndsWith45mins()
+        {
+            var eventModel = EventManagementModelBuilder.Build();
+            var startTimeEndsWith45mins = new EventStartDate(DateTime.Today.AddDays(1).AddHours(9).AddMinutes(45));
+            var validStartTimeModel = eventModel.With(
+                eventStartDate: startTimeEndsWith45mins
+            );
+
+            Validation.validate(validStartTimeModel);
+        }
+
+        [Fact]
         public void TestEndDate_EndDateIsLessThanOneHourAfterStartDate()
         {
             var eventModel = EventManagementModelBuilder.Build();
@@ -73,6 +99,20 @@ namespace Whiteboard.Registration.Domain.Tests
             Assert.Throws<ArgumentException>(() =>
                 Validation.validate(invalidEndTimeModel)
             );
+        }
+
+        [Fact]
+        public void TestEndDate_EndDateIsOneHourAfterStartDate()
+        {
+            var eventModel = EventManagementModelBuilder.Build();
+            var startTime = new EventStartDate(DateTime.Today.AddDays(1).AddHours(+1));
+            var endTimeOneHourAfterStartTime = new EventEndDate(DateTime.Today.AddDays(1).AddHours(+2));
+            var eventModelWithValidTimes = eventModel.With(
+                eventStartDate: startTime,
+                eventEndDate: endTimeOneHourAfterStartTime
+            );
+
+            Validation.validate(eventModelWithValidTimes);
         }
 
         [Fact]
