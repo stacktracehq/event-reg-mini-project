@@ -42,10 +42,20 @@ namespace Whiteboard.Registration.Web.Controllers
 
         // POST /v1/events/
         [HttpPost]
-        public Task Post(EventManagementModel value)
+        public async Task<ActionResult> Post(EventManagementModel value)
         {
-            Validation.validate(value);
-            return _repo.Add(value);
+            try
+            {
+                await _repo.Add(value);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return new JsonResult(ex)
+                {
+                    StatusCode = 400
+                } as ActionResult;
+            }
         }
 
         // PUT /v1/events/{id}
