@@ -9,12 +9,13 @@ import { Guid } from "guid-typescript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons"
 
-export class NewEvent extends React.Component<{} & RouteComponentProps, EventSaveRequest> {
+export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             event: null,
             errors: false,
+            errorMessage: " "
         }
     }
 
@@ -24,15 +25,15 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
             ...this.state.event!,
             id: Guid.raw()
         }
-        console.log(this.state)
         await axios.post<Event>(`https://localhost:5001/v1/events`, request)
                 .then(response => {
                     const { history } = this.props;
                     history.push('/');
                 })
                 .catch(error => {
-                    console.log(error);
+                    this.setState({ errorMessage: error.response.data.Message });
                     this.setState({ errors: true });
+                    console.log(this.state)
                 });
     }
 
@@ -107,14 +108,19 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
     }
 
     public render() {
-        const {errors} = this.state;
+        const {errors, errorMessage} = this.state;
         return (
             <div className={styles.main}>
                 <h1 className="new-event-header">Create a New Event</h1>
+                    {errors && errorMessage===undefined && (
+                        <div className={styles.ohno} role="alert">
+                            Oops, something went wrong
+                            </div>
+                    )}
                     {errors && (
-                      <div className={styles.ohno} role="alert">
-                          Oops, something went wrong
-                          </div>
+                        <div className={styles.ohno} role="alert">
+                            {errorMessage}
+                        </div>
                   )}
                 <form onSubmit={this.processFormSubmission} noValidate={true}>
                     <div className={styles.labelInputDiv}>

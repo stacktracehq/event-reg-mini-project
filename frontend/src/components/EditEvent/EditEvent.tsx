@@ -13,6 +13,7 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
         this.state = {
             event: null,
             errors: false,
+            errorMessage: "",
         }
     }
 
@@ -36,7 +37,7 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     history.push(`/event/${this.props.match.params.id}`);
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error.response);
                     this.setState({ errors: true });
                 });
     }

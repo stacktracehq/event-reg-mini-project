@@ -31,7 +31,8 @@ export interface RegistrationCloseDate {
 
 export interface EventSaveRequest {
     event: Event | null,
-    errors: boolean;
+    errors: boolean,
+    errorMessage: string;
 }
 
 export interface EventDTO {

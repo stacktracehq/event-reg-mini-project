@@ -46,6 +46,7 @@ namespace Whiteboard.Registration.Web.Controllers
         {
             try
             {
+                Validation.validate(value);
                 await _repo.Add(value);
                 return Ok();
             }
@@ -64,9 +65,20 @@ namespace Whiteboard.Registration.Web.Controllers
         {
             if (value.Id != id)
                 return BadRequest();
-            Validation.validate(value);
-            await _repo.Update(value);
-            return Ok();
+
+            try
+            {
+                Validation.validate(value);
+                await _repo.Update(value);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return new JsonResult(ex)
+                {
+                    StatusCode = 400
+                } as ActionResult;
+            }
         }
 
         // DELETE /v1/events/{id}
