@@ -1,7 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import {
-    EventSaveRequest
+    EventSaveRequest, StartTime
 } from "../../models/models"
 import { RouteComponentProps } from "react-router-dom";
 import styles from "./NewEvent.module.css";
@@ -9,18 +9,21 @@ import { Guid } from "guid-typescript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons"
 
-export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest> {
+export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest & StartTime> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             event: null,
             errors: false,
-            errorMessage: " "
+            errorMessage: " ",
+            startHour: "09",
+            startMinute: "00",
         }
     }
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(this.state)
         let request = {
             ...this.state.event!,
             id: Guid.raw()
@@ -106,6 +109,27 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
         })
     }
 
+    private updateEventStartHours = (e: React.FormEvent<HTMLSelectElement>) => {
+        this.setState({
+            startHour:  e.currentTarget.value
+        })
+    }
+
+    private updateEventStartMinutes = (e: React.FormEvent<HTMLSelectElement>) => {
+            this.setState({
+                startMinute: e.currentTarget.value
+            })
+        }
+
+    private updateEventStartMinutesBasedOnAmPm = (e: React.FormEvent<HTMLSelectElement>) => {
+            let currentHour = (document.getElementById("startHours") as HTMLInputElement).value;
+            if ( e.currentTarget.value === "pm" ) {
+                this.setState({
+                    startHour: `${parseInt(currentHour) + 12}`
+                })
+            } 
+        }
+
     public render() {
         const {errors, errorMessage} = this.state;
         return (
@@ -153,6 +177,8 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
                             className={styles.input}
                         />
                     </div>
+
+                    &nbsp;
                     <div className={styles.labelInputDiv}>
                         <label htmlFor="eventStartDate" className={styles.label}>Start Date: </label>
                         <input
@@ -164,6 +190,50 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
                             className={styles.input}
                         />
                     </div>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventStartTime" className={styles.label}>Start Time: </label>
+                        <select
+                            id="startHours"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventStartHours(e)}
+                            defaultValue="09"
+                        >
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="minutes"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventStartMinutes(e)}
+                        >
+                            <option value="0">0</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="ampm"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventStartMinutesBasedOnAmPm(e)}
+                        >
+                            <option value="am">AM</option>
+                            <option value="pm">PM</option>
+                        </select>
+                    </div>
+                    &nbsp;
+
                 <div className={styles.labelInputDiv}>
                     <label htmlFor="eventEndDate" className={styles.label}>End Date: </label>
                         <input

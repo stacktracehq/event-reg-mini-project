@@ -29,3 +29,8 @@ textarea {
 .textareaLabel {
     composes: textareaLabel from "../../styles/styles.css"
 }
+
+.dropdown {
+    composes: input from "../../styles/styles.css";
+    width: 102px;
+}
