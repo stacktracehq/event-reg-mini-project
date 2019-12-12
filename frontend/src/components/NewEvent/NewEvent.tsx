@@ -33,7 +33,6 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
                 .catch(error => {
                     this.setState({ errorMessage: error.response.data.Message });
                     this.setState({ errors: true });
-                    console.log(this.state)
                 });
     }
 

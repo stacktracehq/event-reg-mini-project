@@ -34,3 +34,7 @@ textarea {
 .loadingContainer {
     composes: loadingContainer from "../../styles/styles.css"
 }
+
+.ohno {
+    color: #dc3545;
+}

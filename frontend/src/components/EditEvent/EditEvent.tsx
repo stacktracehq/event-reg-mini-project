@@ -25,7 +25,8 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
                 })
             })
             .catch(error => {
-                console.log(error)
+                this.setState({ errorMessage: error.response.data.Message });
+                this.setState({ errors: true});
             })
     }
 
@@ -37,8 +38,8 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     history.push(`/event/${this.props.match.params.id}`);
                 })
                 .catch(error => {
-                    console.log(error.response);
-                    this.setState({ errors: true });
+                    this.setState({ errorMessage: error.response.data.Message });
+                    this.setState({ errors: true});
                 });
     }
 
@@ -106,7 +107,7 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
     }
 
     public render() {
-        const { errors} = this.state;
+        const { errors, errorMessage } = this.state;
         if (this.state.event !== null) {
             return (
 
@@ -114,11 +115,16 @@ export class EditEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     <h1 className="new-event-header">
                         Edit Event:  {this.state.event!.title.value}
                     </h1>
-                    {errors && (
-                        <div className="alert alert-info alert-error" role="alert">
+                    {errors && errorMessage===undefined && (
+                        <div className={styles.ohno} role="alert">
                             Oops, something went wrong
                             </div>
                     )}
+                    {errors && (
+                        <div className={styles.ohno} role="alert">
+                            {errorMessage}
+                        </div>
+                  )}
                     <form onSubmit={this.processFormSubmission} noValidate={true} >
                         <div className={styles.labelInputDiv}>
                             <label htmlFor="title" className={styles.label}>Event Name: </label>
