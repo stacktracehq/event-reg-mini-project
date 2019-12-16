@@ -46,7 +46,6 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
     }
 
     handleDelete() {
-        console.log("click")
         axios.delete(
             `https://localhost:5001/v1/events/${this.props.match.params.id}`
         )
