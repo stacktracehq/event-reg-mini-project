@@ -21,9 +21,42 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
         }
     }
 
+    private adjustTimeToPm = () => {
+        let ampm = (document.getElementById("ampm") as HTMLInputElement).value;
+
+        if (ampm === "pm") {
+            let currentHour = (document.getElementById("startHours") as HTMLInputElement).value;
+            this.setState({
+                startHour: `${parseInt(currentHour) + 12}`
+            })
+        }
+    }
+
+    private makeStartDateTimeHaveADateAndATime = () => {
+        // create a datetime so we can add some hours to it - wont let me with a EventStartDate type
+        let settingStartDateTime = new Date(this.state.event!.eventStartDate.value + "Z");
+
+        // zero the minutes in the datetime, just incase a form isn't submitted and the user changes the time.
+        settingStartDateTime.setHours(0);
+
+        // add on the hours from the form - the +10 is a terrible terrible workaround because Chrome adds on my timezone and yes I know this is terrible but it works...
+        settingStartDateTime.setHours((settingStartDateTime.getHours() + parseInt(this.state.startHour)) + 10);
+        this.setState({
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventStartDate: { value: settingStartDateTime }
+            }
+        })
+    }
+
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(this.state)
+
+        await this.adjustTimeToPm();
+
+        await this.makeStartDateTimeHaveADateAndATime();
+
         let request = {
             ...this.state.event!,
             id: Guid.raw()
@@ -121,15 +154,6 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
             })
         }
 
-    private updateEventStartMinutesBasedOnAmPm = (e: React.FormEvent<HTMLSelectElement>) => {
-            let currentHour = (document.getElementById("startHours") as HTMLInputElement).value;
-            if ( e.currentTarget.value === "pm" ) {
-                this.setState({
-                    startHour: `${parseInt(currentHour) + 12}`
-                })
-            } 
-        }
-
     public render() {
         const {errors, errorMessage} = this.state;
         return (
@@ -217,7 +241,7 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
                             className={styles.dropdown}
                             onChange={(e) => this.updateEventStartMinutes(e)}
                         >
-                            <option value="0">0</option>
+                            <option value="0">00</option>
                             <option value="15">15</option>
                             <option value="30">30</option>
                             <option value="45">45</option>
@@ -226,7 +250,6 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
                         <select
                             id="ampm"
                             className={styles.dropdown}
-                            onChange={(e) => this.updateEventStartMinutesBasedOnAmPm(e)}
                         >
                             <option value="am">AM</option>
                             <option value="pm">PM</option>

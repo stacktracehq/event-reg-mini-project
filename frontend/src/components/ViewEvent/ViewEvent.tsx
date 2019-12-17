@@ -83,7 +83,7 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event Start Date: </span>
-                        {this.state.eventStartDate.value.toString().substr(0,10)}
+                        {this.state.eventStartDate.value.toString()}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event End Date: </span>
