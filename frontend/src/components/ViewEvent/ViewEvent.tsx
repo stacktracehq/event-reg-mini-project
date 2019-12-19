@@ -58,6 +58,36 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
         })
     }
 
+    formatDateTime(dateTimeStr: Date | string) {
+        if (typeof dateTimeStr === 'string') {
+            dateTimeStr = new Date(dateTimeStr);
+        }
+        let year = dateTimeStr.getFullYear();
+        let month = dateTimeStr.getMonth();
+        let day = dateTimeStr.getDay();
+        let hour = dateTimeStr.getHours();
+        let minutes = dateTimeStr.getMinutes();
+        let ampm = "am";
+
+        // monthNames to get the name of the month for output
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // converts time to either am or pm
+        if (hour > 12) {
+            hour = hour - 12;
+            ampm = "pm";
+        }
+
+        let time = `${hour}:${minutes}${ampm}`;
+
+        // add leading 0 if minutes less than 10
+        if (minutes < 10) {
+            time = `${hour}:0${minutes}${ampm}`
+        }
+
+        return `${day} ${monthNames[month]} ${year}, ${time}`;
+    }
+
     renderEvent() {
         if (this.state.id === "") {
             return (
@@ -70,6 +100,7 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
              )
         } else {
             return (
+
                 <div className={styles.main}>
                     <h1>
                         {this.state.title.value}
@@ -83,7 +114,7 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event Start Date: </span>
-                        {this.state.eventStartDate.value.toString()}
+                        {this.formatDateTime(this.state.eventStartDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event End Date: </span>
