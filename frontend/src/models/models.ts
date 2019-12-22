@@ -58,4 +58,6 @@ export interface EventId {
 export interface StartTime {
     startHour:string,
     startMinute:string,
+    endHour: string,
+    endMinute: string,
 }

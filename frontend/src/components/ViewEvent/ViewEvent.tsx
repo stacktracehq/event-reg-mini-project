@@ -78,11 +78,24 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
             ampm = "pm";
         }
 
+        // converts midday to pm
+        if (hour === 12) {
+            ampm = "pm";
+        }
+
         let time = `${hour}:${minutes}${ampm}`;
+
+        // add leading 0 if midnight
+        if (hour === 0) {
+            time = `0${hour}:${minutes}${ampm}`
+        }
 
         // add leading 0 if minutes less than 10
         if (minutes < 10) {
             time = `${hour}:0${minutes}${ampm}`
+            if (hour === 0) {
+                time = `0${hour}:0${minutes}${ampm}`
+            }
         }
 
         return `${day} ${monthNames[month]} ${year}, ${time}`;
@@ -118,7 +131,7 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event End Date: </span>
-                        {this.state.eventEndDate.value.toString().substr(0,10)}
+                        {this.formatDateTime(this.state.eventEndDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Registration Open Date: </span>
