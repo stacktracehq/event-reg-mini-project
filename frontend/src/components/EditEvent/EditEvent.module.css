@@ -38,3 +38,8 @@ textarea {
 .ohno {
     color: #dc3545;
 }
+
+.dropdown {
+    composes: input from "../../styles/styles.css";
+    width: 102px;
+}
