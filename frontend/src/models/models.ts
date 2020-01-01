@@ -1,5 +1,3 @@
-import { RouteComponentProps } from "react-router-dom";
-
 export interface EventTitle {
     value: string
 }
@@ -60,4 +58,13 @@ export interface StartTime {
     startMinute:string,
     endHour: string,
     endMinute: string,
+}
+
+export type AmPm = "am" | "pm"
+
+export interface EventTime {
+    date: Date,
+    hour: number,
+    minute: number,
+    amPm: AmPm,
 }
