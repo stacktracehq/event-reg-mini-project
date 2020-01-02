@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faEdit } from "@fortawesome/free-regular-svg-icons";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ViewEvent.module.css";
+import { formatDateTimeForPrettyPrint } from "../../utils/dateTimeHelpers"
 
 export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Event> {
     constructor(props: RouteComponentProps<EventId>) {
@@ -58,49 +59,6 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
         })
     }
 
-    formatDateTime(dateTimeStr: Date | string) {
-        if (typeof dateTimeStr === 'string') {
-            dateTimeStr = new Date(dateTimeStr);
-        }
-        let year = dateTimeStr.getFullYear();
-        let month = dateTimeStr.getMonth();
-        let day = dateTimeStr.getDay();
-        let hour = dateTimeStr.getHours();
-        let minutes = dateTimeStr.getMinutes();
-        let ampm = "am";
-
-        // monthNames to get the name of the month for output
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-        // converts time to either am or pm
-        if (hour > 12) {
-            hour = hour - 12;
-            ampm = "pm";
-        }
-
-        // converts midday to pm
-        if (hour === 12) {
-            ampm = "pm";
-        }
-
-        let time = `${hour}:${minutes}${ampm}`;
-
-        // add leading 0 if midnight
-        if (hour === 0) {
-            time = `0${hour}:${minutes}${ampm}`
-        }
-
-        // add leading 0 if minutes less than 10
-        if (minutes < 10) {
-            time = `${hour}:0${minutes}${ampm}`
-            if (hour === 0) {
-                time = `0${hour}:0${minutes}${ampm}`
-            }
-        }
-
-        return `${day} ${monthNames[month]} ${year}, ${time}`;
-    }
-
     renderEvent() {
         if (this.state.id === "") {
             return (
@@ -127,11 +85,11 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event Start Date: </span>
-                        {this.formatDateTime(this.state.eventStartDate.value)}
+                        {formatDateTimeForPrettyPrint(this.state.eventStartDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event End Date: </span>
-                        {this.formatDateTime(this.state.eventEndDate.value)}
+                        {formatDateTimeForPrettyPrint(this.state.eventEndDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Registration Open Date: </span>
