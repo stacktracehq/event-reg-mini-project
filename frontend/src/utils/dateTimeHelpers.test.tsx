@@ -19,7 +19,8 @@ describe('fromEventTimeToADate', () => {
         }
 
         const date = fromEventTimeToADate(eventTime);
-        const expected = new Date("31 December 2019 22:30")
+        let expected = new Date("31 December 2019 22:30")
+        expected.setHours(expected.getHours() +10)
         expect(date).toStrictEqual(expected);
     })
 })

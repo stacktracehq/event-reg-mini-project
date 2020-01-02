@@ -2,7 +2,7 @@ import { EventTime, AmPm } from "../models/models";
 
 export function fromEventTimeToADate(eventTime: EventTime): Date {
     const date = new Date(eventTime.date);
-    date.setHours(fromEventTimeAdjustHourToPm(eventTime));
+    date.setHours(fromEventTimeAdjustHourToPm(eventTime) + 10);
     date.setMinutes(eventTime.minute);
     return date;
 }
@@ -27,7 +27,6 @@ export function fromEventTimeAdjustHourToPm(eventTime: EventTime): number {
     if (eventTime.amPm === "pm" && eventTime.hour !== 12) {
         hour = eventTime.hour + 12
     };
-
     return hour;
 }
 

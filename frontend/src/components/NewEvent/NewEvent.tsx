@@ -1,15 +1,18 @@
 import React from "react";
 import axios from 'axios';
 import {
-    EventSaveRequest, StartTime
+    EventSaveRequest, TimesForEvent, AmPm, EventTime
 } from "../../models/models"
 import { RouteComponentProps } from "react-router-dom";
 import styles from "./NewEvent.module.css";
 import { Guid } from "guid-typescript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons"
+import {
+    fromEventTimeToADate,
+ } from "../../utils/dateTimeHelpers";
 
-export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest & StartTime> {
+export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest & TimesForEvent> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
@@ -23,83 +26,40 @@ export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequ
         }
     }
 
-    private adjustStartTimeToPm = () => {
-        let ampm = (document.getElementById("ampm") as HTMLInputElement).value;
-        let currentHour = (document.getElementById("startHours") as HTMLInputElement).value;
-
-        if (currentHour === "12" && ampm === "am") {
-            this.setState({
-                startHour: "00"
-            })
-        }
-
-        if (ampm === "pm" && this.state.startHour !== "12") {
-            this.setState({
-                startHour: `${parseInt(currentHour) + 12}`
-            })
-        }
-    }
-
-    private adjustEndTimeToPm = () => {
-        let ampm = (document.getElementById("endampm") as HTMLInputElement).value;
-        let currentHour = (document.getElementById("endHours") as HTMLInputElement).value;
-
-        if (currentHour === "12" && ampm === "am") {
-            this.setState({
-                endHour: "00"
-            })
-        }
-
-        if (ampm === "pm" && this.state.endHour !== "12") {
-            this.setState({
-                endHour: `${parseInt(currentHour) + 12}`
-            })
-        }
-    }
-
     private makeStartDateTimeHaveADateAndATime = () => {
-        // create a datetime so we can add some hours to it - wont let me with a EventStartDate type
-        let settingStartDateTime = new Date(this.state.event!.eventStartDate.value + "Z");
-
-        // zero the minutes in the datetime, just incase a form has an error, isn't submitted and the user changes the time.
-        settingStartDateTime.setHours(0);
-        settingStartDateTime.setMinutes(0);
-
-        // add on the hours from the form - the +10 is a terrible terrible workaround because Chrome adds on my timezone and yes I know this is terrible but it works...
-        settingStartDateTime.setHours((settingStartDateTime.getHours() + parseInt(this.state.startHour)) + 10);
-        settingStartDateTime.setMinutes((settingStartDateTime.getMinutes() + parseInt(this.state.startMinute)));
+        const eventTime: EventTime = {
+                date: new Date(this.state.event!.eventStartDate.value + "Z" ),
+                hour: parseInt(this.state.startHour),
+                minute: parseInt(this.state.startMinute),
+                amPm: ((document.getElementById("ampm") as HTMLInputElement).value) as AmPm
+        }
         this.setState({
             ...this.state,
             event: {
                 ...this.state.event!,
-                eventStartDate: { value: settingStartDateTime }
+                eventStartDate: { value: fromEventTimeToADate(eventTime) }
             }
         })
     }
 
-    // This is the same function as above, I couldn't seem to make it work with variables :(
     private makeEndDateTimeHaveADateAndATime = () => {
-        let settingEndDateTime = new Date(this.state.event!.eventEndDate.value + "Z");
-
-        settingEndDateTime.setHours(0);
-        settingEndDateTime.setMinutes(0);
-
-        settingEndDateTime.setHours((settingEndDateTime.getHours() + parseInt(this.state.endHour)) + 10);
-        settingEndDateTime.setMinutes((settingEndDateTime.getMinutes() + parseInt(this.state.endMinute)));
+        const eventTime: EventTime = {
+            date: new Date(this.state.event!.eventEndDate.value + "Z"),
+            hour: parseInt(this.state.endHour),
+            minute: parseInt(this.state.endMinute),
+            amPm: ((document.getElementById("endampm")as HTMLInputElement).value) as AmPm
+        }
         this.setState({
             ...this.state,
             event: {
                 ...this.state.event!,
-                eventEndDate: { value: settingEndDateTime }
+                eventEndDate: { value: fromEventTimeToADate(eventTime) }
             }
         })
     }
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        await this.adjustStartTimeToPm();
-        await this.adjustEndTimeToPm();
 
         await this.makeStartDateTimeHaveADateAndATime();
         await this.makeEndDateTimeHaveADateAndATime();

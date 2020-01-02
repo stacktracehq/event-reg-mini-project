@@ -53,7 +53,7 @@ export interface EventId {
     id: string
 }
 
-export interface StartTime {
+export interface TimesForEvent {
     startHour:string,
     startMinute:string,
     endHour: string,
