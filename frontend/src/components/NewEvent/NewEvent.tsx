@@ -1,37 +1,80 @@
 import React from "react";
 import axios from 'axios';
 import {
-    EventSaveRequest
+    EventSaveRequest, TimesForEvent, AmPm, EventTime
 } from "../../models/models"
 import { RouteComponentProps } from "react-router-dom";
 import styles from "./NewEvent.module.css";
 import { Guid } from "guid-typescript";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-regular-svg-icons"
+import {
+    fromEventTimeToADate,
+ } from "../../utils/dateTimeHelpers";
 
-export class NewEvent extends React.Component<{} & RouteComponentProps, EventSaveRequest> {
+export class NewEvent extends React.Component<RouteComponentProps, EventSaveRequest & TimesForEvent> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             event: null,
             errors: false,
+            errorMessage: " ",
+            startHour: "09",
+            startMinute: "00",
+            endHour: "05",
+            endMinute: "00"
         }
+    }
+
+    private makeStartDateTimeHaveADateAndATime = () => {
+        const eventTime: EventTime = {
+                date: new Date(this.state.event!.eventStartDate.value + "Z" ),
+                hour: parseInt(this.state.startHour),
+                minute: parseInt(this.state.startMinute),
+                amPm: ((document.getElementById("ampm") as HTMLInputElement).value) as AmPm
+        }
+        this.setState({
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventStartDate: { value: fromEventTimeToADate(eventTime) }
+            }
+        })
+    }
+
+    private makeEndDateTimeHaveADateAndATime = () => {
+        const eventTime: EventTime = {
+            date: new Date(this.state.event!.eventEndDate.value + "Z"),
+            hour: parseInt(this.state.endHour),
+            minute: parseInt(this.state.endMinute),
+            amPm: ((document.getElementById("endampm")as HTMLInputElement).value) as AmPm
+        }
+        this.setState({
+            ...this.state,
+            event: {
+                ...this.state.event!,
+                eventEndDate: { value: fromEventTimeToADate(eventTime) }
+            }
+        })
     }
 
     private processFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        await this.makeStartDateTimeHaveADateAndATime();
+        await this.makeEndDateTimeHaveADateAndATime();
+
         let request = {
             ...this.state.event!,
             id: Guid.raw()
         }
-        console.log(this.state)
         await axios.post<Event>(`https://localhost:5001/v1/events`, request)
                 .then(response => {
                     const { history } = this.props;
                     history.push('/');
                 })
                 .catch(error => {
-                    console.log(error);
+                    this.setState({ errorMessage: error.response.data.Message });
                     this.setState({ errors: true });
                 });
     }
@@ -106,15 +149,44 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
         })
     }
 
+    private updateEventStartHours = (e: React.FormEvent<HTMLSelectElement>) => {
+        this.setState({
+            startHour:  e.currentTarget.value
+        })
+    }
+
+    private updateEventStartMinutes = (e: React.FormEvent<HTMLSelectElement>) => {
+            this.setState({
+                startMinute: e.currentTarget.value
+            })
+        }
+
+    private updateEventEndHours = (e: React.FormEvent<HTMLSelectElement>) => {
+        this.setState({
+            endHour:  e.currentTarget.value
+        })
+    }
+
+    private updateEventEndMinutes = (e: React.FormEvent<HTMLSelectElement>) => {
+            this.setState({
+                endMinute: e.currentTarget.value
+            })
+        }
+
     public render() {
-        const {errors} = this.state;
+        const {errors, errorMessage} = this.state;
         return (
             <div className={styles.main}>
                 <h1 className="new-event-header">Create a New Event</h1>
+                    {errors && errorMessage===undefined && (
+                        <div className={styles.ohno} role="alert">
+                            Oops, something went wrong
+                            </div>
+                    )}
                     {errors && (
-                      <div className={styles.ohno} role="alert">
-                          Oops, something went wrong
-                          </div>
+                        <div className={styles.ohno} role="alert">
+                            {errorMessage}
+                        </div>
                   )}
                 <form onSubmit={this.processFormSubmission} noValidate={true}>
                     <div className={styles.labelInputDiv}>
@@ -148,6 +220,8 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
                             className={styles.input}
                         />
                     </div>
+
+                    &nbsp;
                     <div className={styles.labelInputDiv}>
                         <label htmlFor="eventStartDate" className={styles.label}>Start Date: </label>
                         <input
@@ -159,6 +233,49 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
                             className={styles.input}
                         />
                     </div>
+                    <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventStartTime" className={styles.label}>Start Time: </label>
+                        <select
+                            id="startHours"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventStartHours(e)}
+                            defaultValue="09"
+                        >
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="minutes"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventStartMinutes(e)}
+                        >
+                            <option value="0">00</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="ampm"
+                            className={styles.dropdown}
+                        >
+                            <option value="am">AM</option>
+                            <option value="pm">PM</option>
+                        </select>
+                    </div>
+                    &nbsp;
+
                 <div className={styles.labelInputDiv}>
                     <label htmlFor="eventEndDate" className={styles.label}>End Date: </label>
                         <input
@@ -170,6 +287,50 @@ export class NewEvent extends React.Component<{} & RouteComponentProps, EventSav
                             className={styles.input}
                         />
                     </div>
+
+                     <div className={styles.labelInputDiv}>
+                        <label htmlFor="eventEndTime" className={styles.label}>End Time: </label>
+                        <select
+                            id="endHours"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventEndHours(e)}
+                            defaultValue="05"
+                        >
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="eventEndMinutes"
+                            className={styles.dropdown}
+                            onChange={(e) => this.updateEventEndMinutes(e)}
+                        >
+                            <option value="0">00</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                        </select>
+                        &nbsp;
+                        <select
+                            id="endampm"
+                            className={styles.dropdown}
+                            defaultValue="pm"
+                        >
+                            <option value="am">AM</option>
+                            <option value="pm">PM</option>
+                        </select>
+                    </div>
+                    &nbsp;
 
                     <div className={styles.labelInputDiv}>
                         <label htmlFor="registrationOpenDate" className={styles.label}>Registration Open Date: </label>

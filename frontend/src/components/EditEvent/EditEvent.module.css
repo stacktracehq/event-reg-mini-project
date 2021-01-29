@@ -34,3 +34,12 @@ textarea {
 .loadingContainer {
     composes: loadingContainer from "../../styles/styles.css"
 }
+
+.ohno {
+    color: #dc3545;
+}
+
+.dropdown {
+    composes: input from "../../styles/styles.css";
+    width: 102px;
+}

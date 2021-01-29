@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faEdit } from "@fortawesome/free-regular-svg-icons";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ViewEvent.module.css";
+import { formatDateTimeForPrettyPrint } from "../../utils/dateTimeHelpers"
 
 export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Event> {
     constructor(props: RouteComponentProps<EventId>) {
@@ -46,7 +47,6 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
     }
 
     handleDelete() {
-        console.log("click")
         axios.delete(
             `https://localhost:5001/v1/events/${this.props.match.params.id}`
         )
@@ -71,6 +71,7 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
              )
         } else {
             return (
+
                 <div className={styles.main}>
                     <h1>
                         {this.state.title.value}
@@ -84,11 +85,11 @@ export class ViewEvent extends React.Component<RouteComponentProps<EventId>, Eve
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event Start Date: </span>
-                        {this.state.eventStartDate.value.toString().substr(0,10)}
+                        {formatDateTimeForPrettyPrint(this.state.eventStartDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Event End Date: </span>
-                        {this.state.eventEndDate.value.toString().substr(0,10)}
+                        {formatDateTimeForPrettyPrint(this.state.eventEndDate.value)}
                     </p>
                     <p className={styles.spacing}>
                         <span className={styles.fieldName}>Registration Open Date: </span>

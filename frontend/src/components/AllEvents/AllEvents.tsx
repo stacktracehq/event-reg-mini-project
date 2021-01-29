@@ -9,7 +9,6 @@ export class AllEvents extends React.Component<{}, EventDTO[]> {
     }
 
      componentDidMount() {
-         console.log("mounted");
         axios.request<EventDTO[]>({
             url: 'https://localhost:5001/v1/events',
 

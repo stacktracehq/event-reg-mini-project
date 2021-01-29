@@ -1,5 +1,3 @@
-import { RouteComponentProps } from "react-router-dom";
-
 export interface EventTitle {
     value: string
 }
@@ -31,7 +29,8 @@ export interface RegistrationCloseDate {
 
 export interface EventSaveRequest {
     event: Event | null,
-    errors: boolean;
+    errors: boolean,
+    errorMessage: string;
 }
 
 export interface EventDTO {
@@ -52,4 +51,20 @@ export interface Event {
 
 export interface EventId {
     id: string
+}
+
+export interface TimesForEvent {
+    startHour:string,
+    startMinute:string,
+    endHour: string,
+    endMinute: string,
+}
+
+export type AmPm = "am" | "pm"
+
+export interface EventTime {
+    date: Date,
+    hour: number,
+    minute: number,
+    amPm: AmPm,
 }
